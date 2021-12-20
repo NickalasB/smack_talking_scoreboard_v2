@@ -36,11 +36,14 @@ extension When on WidgetTestWhen<_Harness> {
 }
 
 extension Then on WidgetTestThen<_Harness> {
-  void findOneWidget(Finder finder) {
-    expect(finder, findsOneWidget);
+  void findsOneWidget(Finder finder) {
+    expect(finder, _findsOneWidget);
   }
 
-  void findNothing(Finder finder) {
-    expect(finder, findsNothing);
+  void findsNothing(Finder finder) {
+    expect(finder, _findsNothing);
   }
 }
+
+final _findsOneWidget = findsOneWidget;
+final _findsNothing = findsNothing;
