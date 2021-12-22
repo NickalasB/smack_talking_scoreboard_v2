@@ -15,8 +15,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     int _counter = 0;
 
-    return BlocProvider<ScoreboardBloc>(
-      create: (context) => ScoreboardBloc(),
+    return BlocProvider<ConcreteScoreboardBloc>(
+      create: (context) => ConcreteScoreboardBloc(),
       child: Builder(builder: (context) {
         return Scaffold(
           appBar: AppBar(
@@ -30,7 +30,7 @@ class HomeScreen extends StatelessWidget {
                   'You have pushed the button this many times:',
                 ),
                 Text(
-                  '${context.watch<ScoreboardBloc>().state.score}',
+                  '${context.watch<ConcreteScoreboardBloc>().state.score}',
                   style: Theme.of(context).textTheme.headline4,
                 ),
               ],
@@ -39,7 +39,7 @@ class HomeScreen extends StatelessWidget {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               _counter++;
-              context.read<ScoreboardBloc>().add(UpdateScoreEvent(_counter));
+              context.read<ConcreteScoreboardBloc>().add(UpdateScoreEvent(_counter));
             },
             tooltip: 'Increment',
             child: const Icon(Icons.add),

@@ -4,11 +4,7 @@ enum Status { unknown, loading, loaded }
 
 @immutable
 class ScoreboardState extends Equatable {
-  const ScoreboardState._({this.status = Status.unknown, this.scoreResult});
-
-  const ScoreboardState.initial() : this._();
-  const ScoreboardState.loading() : this._(status: Status.loading);
-  const ScoreboardState.loaded(Result<int, Object>? result) : this._(status: Status.loaded, scoreResult: result);
+  const ScoreboardState({this.status = Status.unknown, this.scoreResult});
 
   int get score => scoreResult?.success ?? 0;
 

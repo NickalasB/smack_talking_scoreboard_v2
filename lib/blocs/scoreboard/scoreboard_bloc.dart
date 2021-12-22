@@ -7,12 +7,14 @@ import 'package:result_type/result_type.dart';
 part 'scoreboard_event.dart';
 part 'scoreboard_state.dart';
 
-class ScoreboardBloc extends Bloc<ScoreboardEvent, ScoreboardState> {
-  ScoreboardBloc() : super(const ScoreboardState.initial()) {
+typedef ScoreboardBloc = Bloc<ScoreboardEvent, ScoreboardState>;
+
+class ConcreteScoreboardBloc extends Bloc<ScoreboardEvent, ScoreboardState> {
+  ConcreteScoreboardBloc() : super(const ScoreboardState()) {
     on<UpdateScoreEvent>(_emitScoreChanged);
   }
 
   _emitScoreChanged(UpdateScoreEvent event, Emitter<ScoreboardState> emit) {
-    emit(ScoreboardState.loaded(Success(event.score)));
+    emit(ScoreboardState(status: Status.loaded, scoreResult: Success(event.score)));
   }
 }
