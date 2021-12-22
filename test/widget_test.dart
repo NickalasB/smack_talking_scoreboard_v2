@@ -6,7 +6,7 @@ import 'harness.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', harness((given, when, then) async {
-    await given.pumpMaterialWidget(const MyApp());
+    await given.pumpMaterialWidget(const App());
     then.findsOneWidget(find.text('0'));
     then.findsNothing(find.text('1'));
 
