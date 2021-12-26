@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('FakeFirebaseFirestore should work', () async {
-    final instance = FakeFirebaseFirestore();
+    final FakeFirebaseFirestore instance = FakeFirebaseFirestore();
     await instance.collection('users').add({
       'username': 'Bob',
     });
@@ -11,7 +11,5 @@ void main() {
 
     expect(snapshot.docs.length, 1);
     expect(snapshot.docs.first.get('username'), 'Bob');
-
-    print(instance.dump());
   });
 }

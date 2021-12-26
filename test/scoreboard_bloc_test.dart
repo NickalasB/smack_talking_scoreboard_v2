@@ -1,4 +1,5 @@
 import 'package:async/async.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:given_when_then/given_when_then.dart';
 import 'package:result_type/result_type.dart';
@@ -55,11 +56,14 @@ void main() {
 class _Harness {
   late ScoreboardBloc scoreboardBloc;
   late StreamQueue<ScoreboardState> stateQueue;
+  late FakeFirebaseFirestore fakeFirebaseFirestore;
 }
 
 Future<void> Function() harness(UnitTestHarnessCallback<_Harness> callback) {
   final harness = _Harness();
-  harness.scoreboardBloc = ConcreteScoreboardBloc();
+  harness.fakeFirebaseFirestore = FakeFirebaseFirestore();
+
+  harness.scoreboardBloc = ConcreteScoreboardBloc(harness.fakeFirebaseFirestore);
 
   harness.stateQueue = StreamQueue<ScoreboardState>(harness.scoreboardBloc.stream);
 

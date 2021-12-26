@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,16 +8,18 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({
     Key? key,
     required this.title,
+    required this.firestore,
   }) : super(key: key);
 
   final String title;
+  final FirebaseFirestore firestore;
 
   @override
   Widget build(BuildContext context) {
     int _counter = 0;
 
     return BlocProvider<ConcreteScoreboardBloc>(
-      create: (context) => ConcreteScoreboardBloc(),
+      create: (context) => ConcreteScoreboardBloc(firestore),
       child: Builder(builder: (context) {
         return Scaffold(
           appBar: AppBar(

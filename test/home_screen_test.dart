@@ -1,12 +1,22 @@
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smack_talking_scoreboard_v2/main.dart';
+import 'package:smack_talking_scoreboard_v2/presentation/screens/home_screen.dart';
 
 import 'harness.dart';
+import 'test_helpers.dart';
 
 void main() {
+  setUpFirebaseTests();
+
   testWidgets('Counter increments smoke test', harness((given, when, then) async {
-    await given.pumpMaterialWidget(const App());
+    final fakeFireStore = FakeFirebaseFirestore();
+    await given.pumpMaterialWidget(
+      HomeScreen(
+        title: 'anything',
+        firestore: fakeFireStore,
+      ),
+    );
     then.findsOneWidget(find.text('0'));
     then.findsNothing(find.text('1'));
 
