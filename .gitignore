@@ -13,7 +13,13 @@
 *.iml
 *.ipr
 *.iws
-.idea/
+**/.idea/workspace.xml
+**/.idea/misc.xml
+**/.idea/tasks.xml
+**/.idea/gradle.xml
+**/.idea/libraries
+**/.idea/dictionaries
+**/.ideac/caches
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
@@ -32,7 +38,7 @@
 /build/
 
 # Web related
-lib/generated_plugin_registrant.dart
+app/lib/generated_plugin_registrant.dart
 
 # Symbolication related
 app.*.symbols
@@ -41,6 +47,6 @@ app.*.symbols
 app.*.map.json
 
 # Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+/app/android/app/debug
+/app/android/app/profile
+/app/android/app/release
