@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="all in app" type="FlutterTestConfigType" factoryName="Flutter Test">
-    <option name="testDir" value="$PROJECT_DIR$/test" />
+    <option name="testDir" value="$PROJECT_DIR$/app" />
     <option name="useRegexp" value="false" />
     <option name="additionalArgs" value="" />
     <method v="2" />
