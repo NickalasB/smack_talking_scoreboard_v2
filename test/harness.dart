@@ -13,9 +13,11 @@ class _Harness extends WidgetTestHarness {
 extension Given on WidgetTestGiven<_Harness> {
   Future<void> pumpMaterialWidget(Widget child) async {
     await tester.pumpWidget(
-      Directionality(
-        textDirection: TextDirection.ltr,
-        child: child,
+      MaterialApp(
+        home: Directionality(
+          textDirection: TextDirection.ltr,
+          child: child,
+        ),
       ),
     );
   }
