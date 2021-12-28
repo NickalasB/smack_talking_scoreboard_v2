@@ -5,6 +5,7 @@ import 'package:authentication_public/authentication_public.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'auth_exceptions.dart';
@@ -19,7 +20,9 @@ class AuthenticationRepository implements Authentication {
 
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
-  firebase_auth.User? _cachedUser;
+
+  @visibleForTesting
+  firebase_auth.User? cachedUser;
 
   /// Stream of [ScoreboardUser] which will emit the current user when
   /// the authentication state changes.
@@ -29,7 +32,7 @@ class AuthenticationRepository implements Authentication {
   Stream<ScoreboardUser> get user {
     return _firebaseAuth.authStateChanges().map((firebase_auth.User? firebaseUser) {
       final user = firebaseUser == null ? ScoreboardUser.empty : firebaseUser.toUser;
-      _cachedUser = firebaseUser;
+      cachedUser = firebaseUser;
       return user;
     });
   }
@@ -38,7 +41,7 @@ class AuthenticationRepository implements Authentication {
   /// Defaults to [User.empty] if there is no cached user.
   @override
   ScoreboardUser? get currentUser {
-    return _cachedUser?.toUser ?? ScoreboardUser.empty;
+    return cachedUser?.toUser ?? ScoreboardUser.empty;
   }
 
   /// Creates a new user with the provided [email] and [password].
@@ -108,6 +111,7 @@ class AuthenticationRepository implements Authentication {
   @override
   Future<void> logOut() async {
     try {
+      cachedUser = null;
       await Future.wait([
         _firebaseAuth.signOut(),
         _googleSignIn.signOut(),
