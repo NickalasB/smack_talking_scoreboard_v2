@@ -40,7 +40,7 @@ class AuthenticationRepository implements Authentication {
   /// Returns the current cached user.
   /// Defaults to [User.empty] if there is no cached user.
   @override
-  ScoreboardUser? get currentUser {
+  ScoreboardUser get currentUser {
     return cachedUser?.toUser ?? ScoreboardUser.empty;
   }
 

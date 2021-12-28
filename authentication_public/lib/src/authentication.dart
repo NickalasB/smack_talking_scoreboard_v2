@@ -1,7 +1,7 @@
 import 'package:authentication_private/authentication_private.dart';
 
 abstract class Authentication {
-  ScoreboardUser? get currentUser => throw UnimplementedError();
+  ScoreboardUser get currentUser;
 
   Future<void> logInWithEmailAndPassword({required String email, required String password});
 
