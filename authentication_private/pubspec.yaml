@@ -1,13 +1,18 @@
 name: authentication_private
 description: A private packagee for user authentication.
 version: 0.0.1
+publish_to: 'none'
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
+  authentication_public:
+    path: ../authentication_public
+  equatable: ^2.0.3
   firebase_auth: ^3.3.4
+  firebase_auth_mocks: ^0.8.2
   flutter:
     sdk: flutter
   given_when_then: ^0.2.0
