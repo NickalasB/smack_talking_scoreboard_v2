@@ -1,4 +1,4 @@
-import 'package:authentication_private/authentication_private.dart';
+import '../authentication_public.dart';
 
 abstract class Authentication {
   ScoreboardUser get currentUser;

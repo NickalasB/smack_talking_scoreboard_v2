@@ -1,5 +1,5 @@
 import 'package:authentication_private/authentication_private.dart';
-import 'package:authentication_private/src/scoreboard_user.dart';
+import 'package:authentication_public/src/scoreboard_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';

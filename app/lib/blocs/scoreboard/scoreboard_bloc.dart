@@ -11,11 +11,14 @@ part 'scoreboard_state.dart';
 typedef ScoreboardBloc = Bloc<ScoreboardEvent, ScoreboardState>;
 
 class ConcreteScoreboardBloc extends Bloc<ScoreboardEvent, ScoreboardState> {
-  ConcreteScoreboardBloc(FirebaseFirestore firestore) : super(const ScoreboardState()) {
-    on<UpdateScoreEvent>((event, emit) => _emitScoreChanged(event, emit, firestore));
+  ConcreteScoreboardBloc(FirebaseFirestore firestore)
+      : _firestore = firestore,
+        super(const ScoreboardState()) {
+    on<UpdateScoreEvent>(_emitScoreChanged);
   }
+  final FirebaseFirestore _firestore;
 
-  _emitScoreChanged(UpdateScoreEvent event, Emitter<ScoreboardState> emit, FirebaseFirestore firestore) async {
+  void _emitScoreChanged(UpdateScoreEvent event, Emitter<ScoreboardState> emit) async {
     emit(ScoreboardState(status: Status.loaded, scoreResult: Success(event.score)));
   }
 }
