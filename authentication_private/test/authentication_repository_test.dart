@@ -43,7 +43,7 @@ void main() {
 
     await repository.logInWithEmailAndPassword(email: 'anything@test.com', password: 'password');
     await whenEmitsFirstNonEmptyUser(repository);
-    thenScoreboardUserHas(repository.currentUser!, id: '123', email: 'anything@test.com', name: 'FakeUser');
+    thenScoreboardUserHas(repository.currentUser, id: '123', email: 'anything@test.com', name: 'FakeUser');
   });
 
   group('signUp', () {
@@ -65,7 +65,7 @@ void main() {
 
       await repository.logInWithGoogle();
       await whenEmitsFirstNonEmptyUser(repository);
-      thenScoreboardUserHas(repository.currentUser!, id: '123', email: 'anything@test.com', name: 'FakeUser');
+      thenScoreboardUserHas(repository.currentUser, id: '123', email: 'anything@test.com', name: 'FakeUser');
     });
   });
 
@@ -81,7 +81,7 @@ void main() {
 
       await repository.logInWithEmailAndPassword(email: 'anything@test.com', password: 'password');
       await whenEmitsFirstNonEmptyUser(repository);
-      thenScoreboardUserHas(repository.currentUser!, id: '123', email: 'anything@test.com', name: 'FakeUser');
+      thenScoreboardUserHas(repository.currentUser, id: '123', email: 'anything@test.com', name: 'FakeUser');
     });
 
     test('should throw LogInWithEmailAndPasswordFailure when logInWithEmailAndPassword fails', () async {
@@ -108,7 +108,7 @@ void main() {
         await repository.logOut();
         expect(repository.cachedUser, isNull);
 
-        thenScoreboardUserHas(repository.currentUser!, id: '', email: null, name: null);
+        thenScoreboardUserHas(repository.currentUser, id: '', email: null, name: null);
       },
       skip: true,
     );
