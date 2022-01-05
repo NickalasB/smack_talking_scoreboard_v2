@@ -2,16 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smack_talking_scoreboard_v2/blocs/app/app_bloc.dart';
 import 'package:smack_talking_scoreboard_v2/blocs/scoreboard/scoreboard_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
     Key? key,
     required this.title,
+    required this.authStatus,
     required this.firestore,
   }) : super(key: key);
 
   final String title;
+  final AppStatus authStatus;
   final FirebaseFirestore firestore;
 
   @override

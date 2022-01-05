@@ -1,6 +1,7 @@
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:smack_talking_scoreboard_v2/blocs/app/app_bloc.dart';
 import 'package:smack_talking_scoreboard_v2/presentation/screens/home_screen.dart';
 
 import 'harness.dart';
@@ -14,6 +15,7 @@ void main() {
     await given.pumpMaterialWidget(
       HomeScreen(
         title: 'anything',
+        authStatus: AppStatus.authenticated,
         firestore: fakeFireStore,
       ),
     );
