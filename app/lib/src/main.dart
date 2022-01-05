@@ -4,11 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smack_talking_scoreboard_v2/blocs/app/app_bloc.dart';
-import 'package:smack_talking_scoreboard_v2/presentation/screens/home_screen.dart';
+import 'package:smack_talking_scoreboard_v2/firebase/firebase_options.dart';
 
+import '../src/blocs/app/app_bloc.dart';
+import '../src/presentation/screens/home_screen.dart';
 import 'blocs/app_bloc_observer.dart';
-import 'firebase/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,11 +45,13 @@ class App extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),
-          home: HomeScreen(
-            title: 'Flutter Demo Home Page',
-            authStatus: context.select((AppBloc bloc) => bloc.state.status),
-            firestore: FirebaseFirestore.instance,
-          ),
+          home: Builder(builder: (context) {
+            return HomeScreen(
+              title: 'Flutter Demo Home Page',
+              authStatus: context.select((AppBloc bloc) => bloc.state.status),
+              firestore: FirebaseFirestore.instance,
+            );
+          }),
         ),
       ),
     );

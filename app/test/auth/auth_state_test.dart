@@ -1,6 +1,6 @@
 import 'package:authentication_public/authentication_public.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smack_talking_scoreboard_v2/blocs/auth/auth_bloc.dart';
+import 'package:smack_talking_scoreboard_v2/src/blocs/auth/auth_bloc.dart';
 
 void main() {
   group('AuthState', () {
