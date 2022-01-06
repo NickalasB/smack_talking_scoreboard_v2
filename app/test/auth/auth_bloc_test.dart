@@ -3,8 +3,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../lib/src/blocs/auth/auth_bloc.dart';
-import '../fake_authentication.dart';
 import '../test_helpers.dart';
+import 'fake_authentication.dart';
 
 void main() {
   setUpFirebaseTests();
