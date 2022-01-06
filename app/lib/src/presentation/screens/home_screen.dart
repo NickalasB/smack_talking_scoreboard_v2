@@ -8,47 +8,41 @@ import 'package:smack_talking_scoreboard_v2/src/blocs/scoreboard/scoreboard_bloc
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
     Key? key,
-    required this.title,
-    required this.authStatus,
     required this.firestore,
   }) : super(key: key);
 
-  final String title;
-  final AppStatus authStatus;
   final FirebaseFirestore firestore;
+
+  static Page page() => MaterialPage<void>(child: HomeScreen(firestore: FirebaseFirestore.instance));
 
   @override
   Widget build(BuildContext context) {
-    int _counter = 0;
+    final textTheme = Theme.of(context).textTheme;
+
+    final user = context.select((AppBloc bloc) => bloc.state.user);
 
     return BlocProvider<ConcreteScoreboardBloc>(
       create: (context) => ConcreteScoreboardBloc(firestore),
       child: Builder(builder: (context) {
         return Scaffold(
-          appBar: AppBar(
-            title: Text(title),
-          ),
-          body: Center(
+          appBar: AppBar(title: Text('Smack Talking Scoreboard'), actions: <Widget>[
+            IconButton(
+              key: const Key('homePage_logout_iconButton'),
+              icon: const Icon(Icons.exit_to_app),
+              onPressed: () => context.read<AppBloc>().add(AppLogoutRequested()),
+            )
+          ]),
+          body: Align(
+            alignment: const Alignment(0, -1 / 3),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                const Text(
-                  'You have pushed the button this many times:',
-                ),
-                Text(
-                  '${context.watch<ConcreteScoreboardBloc>().state.score}',
-                  style: Theme.of(context).textTheme.headline4,
-                ),
+                const SizedBox(height: 4),
+                Text(user.email ?? '', style: textTheme.headline6),
+                const SizedBox(height: 4),
+                Text(user.name ?? '', style: textTheme.headline5),
               ],
             ),
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              _counter++;
-              context.read<ConcreteScoreboardBloc>().add(UpdateScoreEvent(_counter));
-            },
-            tooltip: 'Increment',
-            child: const Icon(Icons.add),
           ),
         );
       }),

@@ -12,6 +12,10 @@ dependencies:
     sdk: flutter
   authentication_private:
     path: ../authentication_private
+  formz: ^0.4.1
+  equatable: ^2.0.3
+  flutter_bloc: ^8.0.1
+  font_awesome_flutter: ^9.2.0
 
 dev_dependencies:
   flutter_test:
