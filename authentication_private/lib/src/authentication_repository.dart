@@ -121,7 +121,7 @@ class AuthenticationRepository implements Authentication {
   }
 }
 
-extension on firebase_auth.User {
+extension UserExtension on firebase_auth.User {
   ScoreboardUser get toUser {
     return ScoreboardUser(id: uid, email: email, name: displayName);
   }

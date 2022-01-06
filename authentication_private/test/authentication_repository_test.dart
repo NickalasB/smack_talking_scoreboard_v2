@@ -1,3 +1,4 @@
+// ignore_for_file: prefer_const_constructors
 import 'package:authentication_private/authentication_private.dart';
 import 'package:authentication_public/src/scoreboard_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -49,7 +50,20 @@ void main() {
   group('signUp', () {
     test('Should signUp', () async {
       // TODO(me): createUserWithEmailAndPassword is not faked MockFirebaseAuth https://github.com/atn832/firebase_auth_mocks/issues/28
-    });
+      final auth = MockFirebaseAuth();
+
+      final repository = AuthenticationRepository(
+        firebaseAuth: auth,
+        googleSignIn: MockGoogleSignIn(),
+      );
+
+      expectLater(
+        () => repository.signUp(email: 'anything@test.com', password: 'password'),
+        isNot(
+          throwsA(SignUpWithEmailAndPasswordFailure),
+        ),
+      );
+    }, skip: true);
   });
 
   group('logInWithGoogle', () {
@@ -112,6 +126,12 @@ void main() {
       },
       skip: true,
     );
+  });
+
+  test('ToUser', () {
+    final firebaseUser = MockUser(uid: '123', email: 'anything@test.com', displayName: 'FakeUser');
+    final scoreboardUser = ScoreboardUser(id: '123', email: 'anything@test.com', name: 'FakeUser');
+    expect(firebaseUser.toUser, scoreboardUser);
   });
 }
 
