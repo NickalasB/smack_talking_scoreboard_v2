@@ -12,12 +12,10 @@ dependencies:
     path: ../authentication_public
   equatable: ^2.0.3
   firebase_auth: ^3.3.4
-  firebase_auth_mocks: ^0.8.2
   flutter:
     sdk: flutter
   given_when_then: ^0.2.0
   google_sign_in: ^5.2.1
-  google_sign_in_mocks: ^0.2.1
   mocktail: ^0.2.0
 
 dev_dependencies:
