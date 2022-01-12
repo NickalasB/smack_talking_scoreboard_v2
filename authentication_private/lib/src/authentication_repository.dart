@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'auth_exceptions.dart';
@@ -19,6 +20,12 @@ class AuthenticationRepository implements Authentication {
 
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
+
+  /// Whether or not the current environment is web
+  /// Should only be overriden for testing purposes. Otherwise,
+  /// defaults to [kIsWeb]
+  @visibleForTesting
+  bool isWeb = kIsWeb;
 
   @visibleForTesting
   firebase_auth.User? cachedUser;
@@ -68,12 +75,20 @@ class AuthenticationRepository implements Authentication {
     try {
       late final firebase_auth.AuthCredential credential;
 
-      final googleUser = await _googleSignIn.signIn();
-      final googleAuth = await googleUser!.authentication;
-      credential = firebase_auth.GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+      if (isWeb) {
+        final googleProvider = firebase_auth.GoogleAuthProvider();
+        final userCredential = await _firebaseAuth.signInWithPopup(
+          googleProvider,
+        );
+        credential = userCredential.credential!;
+      } else {
+        final googleUser = await _googleSignIn.signIn();
+        final googleAuth = await googleUser!.authentication;
+        credential = firebase_auth.GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+      }
 
       await _firebaseAuth.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
