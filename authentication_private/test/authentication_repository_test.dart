@@ -174,50 +174,75 @@ void main() {
       });
     });
 
-    // group('logInWithEmailAndPassword', () {
-    //   test('should log in with logInWithEmailAndPassword', () async {
-    //     final auth = MockFirebaseAuth(
-    //       mockUser: MockUser(uid: '123', email: 'anything@test.com', displayName: 'FakeUser'),
-    //     );
-    //
-    //     final repository = AuthenticationRepository(
-    //       firebaseAuth: auth,
-    //     );
-    //
-    //     await repository.logInWithEmailAndPassword(email: 'anything@test.com', password: 'password');
-    //     await whenEmitsFirstNonEmptyUser(repository);
-    //     thenScoreboardUserHas(repository.currentUser, id: '123', email: 'anything@test.com', name: 'FakeUser');
-    //   });
-    //
-    //   test('should throw LogInWithEmailAndPasswordFailure when logInWithEmailAndPassword fails', () async {
-    //     // TODO(me): figure out best way to mock error cases
-    //   });
-    // });
+    group('logInWithEmailAndPassword', () {
+      setUp(() {
+        when(
+          () => firebaseAuth.signInWithEmailAndPassword(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+          ),
+        ).thenAnswer((_) => Future.value(MockUserCredential()));
+      });
 
-    // group('logOut', () {
-    //   test(
-    //     'Should logOut',
-    //     () async {
-    //       // TODO(me): MockGoogleSignIn() doesn't implement the ability to fake googleSignin.signOut so this test fails
-    //       final auth = MockFirebaseAuth(
-    //           signedIn: true, mockUser: MockUser(uid: '123', email: 'anything@test.com', displayName: 'FakeUser'));
-    //
-    //       final repository = AuthenticationRepository(
-    //         firebaseAuth: auth,
-    //         googleSignIn: MockGoogleSignIn(),
-    //       );
-    //       await repository.logInWithEmailAndPassword(email: 'anything@test.com', password: 'password');
-    //       await whenEmitsFirstNonEmptyUser(repository);
-    //
-    //       expect(repository.cachedUser, isNot(null));
-    //       await repository.logOut();
-    //       expect(repository.cachedUser, isNull);
-    //
-    //       thenScoreboardUserHas(repository.currentUser, id: '', email: null, name: null);
-    //     },
-    //     skip: true,
-    //   );
-    // });
+      test('calls signInWithEmailAndPassword', () async {
+        await authenticationRepository.logInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        verify(
+          () => firebaseAuth.signInWithEmailAndPassword(
+            email: email,
+            password: password,
+          ),
+        ).called(1);
+      });
+
+      test('succeeds when signInWithEmailAndPassword succeeds', () async {
+        expect(
+          authenticationRepository.logInWithEmailAndPassword(
+            email: email,
+            password: password,
+          ),
+          completes,
+        );
+      });
+
+      test(
+          'throws LogInWithEmailAndPasswordFailure '
+          'when signInWithEmailAndPassword throws', () async {
+        when(
+          () => firebaseAuth.signInWithEmailAndPassword(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+          ),
+        ).thenThrow(Exception());
+        expect(
+          authenticationRepository.logInWithEmailAndPassword(
+            email: email,
+            password: password,
+          ),
+          throwsA(isA<LogInWithEmailAndPasswordFailure>()),
+        );
+      });
+    });
+
+    group('logOut', () {
+      test('calls signOut', () async {
+        when(() => firebaseAuth.signOut()).thenAnswer((_) async {});
+        when(() => googleSignIn.signOut()).thenAnswer((_) async {});
+        await authenticationRepository.logOut();
+        verify(() => firebaseAuth.signOut()).called(1);
+        verify(() => googleSignIn.signOut()).called(1);
+      });
+
+      test('throws LogOutFailure when signOut throws', () async {
+        when(() => firebaseAuth.signOut()).thenThrow(Exception());
+        expect(
+          authenticationRepository.logOut(),
+          throwsA(isA<LogOutFailure>()),
+        );
+      });
+    });
 
     group('user', () {});
 
