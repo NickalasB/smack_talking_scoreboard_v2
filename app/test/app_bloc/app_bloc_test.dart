@@ -1,57 +1,81 @@
+// ignore_for_file: prefer_const_constructors, must_be_immutable
+import 'package:authentication_private/authentication_private.dart';
 import 'package:authentication_public/authentication_public.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:smack_talking_scoreboard_v2/src/blocs/app/app_bloc.dart';
 
-import '../auth/fake_authentication.dart';
 import '../test_helpers.dart';
 
-class MockAppBloc extends MockBloc<AppEvent, AppState> implements AppBloc {}
+class MockAuthenticationRepository extends Mock implements AuthenticationRepository {}
+
+class MockUser extends Mock implements ScoreboardUser {}
 
 void main() {
   setUpFirebaseTests();
 
-  final appBloc = MockAppBloc();
+  group('AppBloc', () {
+    final user = MockUser();
+    late AuthenticationRepository authenticationRepository;
 
-  test('Initial state should be unauthenticated', () async {
-    whenListen(
-      appBloc,
-      Stream.fromIterable([
-        const AppState.unauthenticated(),
-        const AppState.authenticated(ScoreboardUser(id: '123')),
-      ]),
-      initialState: const AppState.unauthenticated(),
-    );
+    setUp(() {
+      authenticationRepository = MockAuthenticationRepository();
+      when(() => authenticationRepository.user).thenAnswer(
+        (_) => Stream.empty(),
+      );
+      when(
+        () => authenticationRepository.currentUser,
+      ).thenReturn(ScoreboardUser.anonymous);
+      when(
+        () => authenticationRepository.logOut(),
+      ).thenAnswer((_) async {});
+    });
 
-    expect(appBloc.state, equals(const AppState.unauthenticated()));
+    test('initial state is unauthenticated when user is anonymous', () {
+      expect(
+        AppBloc(authenticationRepository: authenticationRepository).state,
+        AppState.unauthenticated(),
+      );
+    });
+
+    group('UserChanged', () {
+      blocTest<AppBloc, AppState>(
+        'emits authenticated when user is not anonymous',
+        build: () {
+          when(() => user.isNotAnonymous).thenReturn(true);
+          when(() => authenticationRepository.user).thenAnswer(
+            (_) => Stream.value(user),
+          );
+          return AppBloc(authenticationRepository: authenticationRepository);
+        },
+        seed: () => AppState.unauthenticated(),
+        expect: () => [AppState.authenticated(user)],
+      );
+
+      blocTest<AppBloc, AppState>(
+        'emits unauthenticated when user is anonymous',
+        build: () {
+          when(() => authenticationRepository.user).thenAnswer(
+            (_) => Stream.value(ScoreboardUser.anonymous),
+          );
+          return AppBloc(authenticationRepository: authenticationRepository);
+        },
+        expect: () => [AppState.unauthenticated()],
+      );
+    });
+
+    group('LogoutRequested', () {
+      blocTest<AppBloc, AppState>(
+        'invokes logOut',
+        build: () {
+          return AppBloc(authenticationRepository: authenticationRepository);
+        },
+        act: (bloc) => bloc.add(AppLogoutRequested()),
+        verify: (_) {
+          verify(() => authenticationRepository.logOut()).called(1);
+        },
+      );
+    });
   });
-
-  test('Should emit authenticatedUser from stream', () async {
-    whenListen(
-      appBloc,
-      Stream.fromIterable([
-        const AppState.unauthenticated(),
-        const AppState.authenticated(ScoreboardUser(id: '123')),
-      ]),
-      initialState: const AppState.unauthenticated(),
-    );
-
-    await expectLater(
-        appBloc.stream,
-        emitsInOrder(
-            <AppState>[const AppState.unauthenticated(), const AppState.authenticated(ScoreboardUser(id: '123'))]));
-
-    expect(appBloc.state, equals(const AppState.authenticated(ScoreboardUser(id: '123'))));
-  });
-
-  blocTest(
-    'Should emit new authenticated user when AppUserChangedEvent successfully added',
-    setUp: () => FakeAuthentication.fakeCurrentUser = const ScoreboardUser(id: '123', email: 'test@test.com'),
-    build: () => AppBloc(authenticationRepository: FakeAuthentication()),
-    act: (AppBloc bloc) => bloc.add(const AppUserChanged(ScoreboardUser(id: '555', email: 'new@test.com'))),
-    expect: () => [
-      const AppState.authenticated(ScoreboardUser(id: '555', email: 'new@test.com')),
-      const AppState.authenticated(ScoreboardUser(id: '123', email: 'test@test.com')),
-    ],
-  );
 }
