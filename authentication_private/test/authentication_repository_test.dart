@@ -3,7 +3,6 @@ import 'package:authentication_private/authentication_private.dart';
 import 'package:authentication_private/src/cache_client.dart';
 import 'package:authentication_public/src/scoreboard_user.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -259,6 +258,17 @@ void main() {
         );
       });
 
+      test('ToUser', () {
+        final firebaseUser = MockFirebaseUser();
+        when(() => firebaseUser.uid).thenReturn(_mockFirebaseUserUid);
+        when(() => firebaseUser.email).thenReturn(_mockFirebaseUserEmail);
+        when(() => firebaseUser.displayName).thenReturn('Nick');
+        when(() => firebaseUser.photoURL).thenReturn(null);
+        when(() => firebaseAuth.authStateChanges()).thenAnswer((_) => Stream.value(firebaseUser));
+        final scoreboardUser = ScoreboardUser(id: _mockFirebaseUserUid, email: _mockFirebaseUserEmail, name: 'Nick');
+        expect(firebaseUser.toUser, scoreboardUser);
+      });
+
       test('emits User when firebase user is not null', () async {
         final firebaseUser = MockFirebaseUser();
         when(() => firebaseUser.uid).thenReturn(_mockFirebaseUserUid);
@@ -278,26 +288,23 @@ void main() {
       });
     });
 
-    group('currentUser', () {});
+    group('currentUser', () {
+      test('returns User.anonymous when cached user is null', () {
+        when(
+          () => cache.read(key: AuthenticationRepository.userCacheKey),
+        ).thenReturn(null);
+        expect(
+          authenticationRepository.currentUser,
+          equals(ScoreboardUser.anonymous),
+        );
+      });
 
-    test('ToUser', () {
-      final firebaseUser = MockUser(uid: '123', email: 'anything@test.com', displayName: 'FakeUser');
-      final scoreboardUser = ScoreboardUser(id: '123', email: 'anything@test.com', name: 'FakeUser');
-      expect(firebaseUser.toUser, scoreboardUser);
+      test('returns User when cached user is not null', () async {
+        when(
+          () => cache.read(key: AuthenticationRepository.userCacheKey),
+        ).thenReturn(user);
+        expect(authenticationRepository.currentUser, equals(user));
+      });
     });
   });
-}
-
-Future<void> whenEmitsFirstNonEmptyUser(AuthenticationRepository repository) async {
-  await repository.user.any((element) => element.id != '');
-}
-
-void thenScoreboardUserHas(ScoreboardUser user, {required String id, String? email, String? name}) {
-  expect(
-    user,
-    const TypeMatcher<ScoreboardUser>()
-        .having((p0) => p0.id, 'id', id)
-        .having((p0) => p0.email, 'email', email)
-        .having((p0) => p0.name, 'name', name),
-  );
 }
