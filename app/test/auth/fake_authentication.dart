@@ -2,7 +2,7 @@ import 'package:authentication_private/authentication_private.dart';
 import 'package:authentication_public/authentication_public.dart';
 
 class FakeAuthentication extends AuthenticationRepository {
-  static ScoreboardUser fakeCurrentUser = ScoreboardUser.empty;
+  static ScoreboardUser fakeCurrentUser = ScoreboardUser.anonymous;
 
   @override
   ScoreboardUser get currentUser => fakeCurrentUser;

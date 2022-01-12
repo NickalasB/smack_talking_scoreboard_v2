@@ -9,15 +9,19 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'auth_exceptions.dart';
+import 'cache_client.dart';
 
 /// Repository which manages user authentication.
 class AuthenticationRepository implements Authentication {
   AuthenticationRepository({
+    CacheClient? cache,
     firebase_auth.FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
-  })  : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
+  })  : _cache = cache ?? CacheClient(),
+        _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn.standard();
 
+  final CacheClient _cache;
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
@@ -27,27 +31,29 @@ class AuthenticationRepository implements Authentication {
   @visibleForTesting
   bool isWeb = kIsWeb;
 
+  /// User cache key.
+  /// Should only be used for testing purposes.
   @visibleForTesting
-  firebase_auth.User? cachedUser;
+  static const userCacheKey = '__user_cache_key__';
 
   /// Stream of [ScoreboardUser] which will emit the current user when
   /// the authentication state changes.
   ///
-  /// Emits [ScoreboardUser.empty] if the user is not authenticated.
+  /// Emits [ScoreboardUser.anonymous] if the user is not authenticated.
   @override
   Stream<ScoreboardUser> get user {
-    return _firebaseAuth.authStateChanges().map((firebase_auth.User? firebaseUser) {
-      final user = firebaseUser == null ? ScoreboardUser.empty : firebaseUser.toUser;
-      cachedUser = firebaseUser;
+    return _firebaseAuth.authStateChanges().map((firebaseUser) {
+      final user = firebaseUser == null ? ScoreboardUser.anonymous : firebaseUser.toUser;
+      _cache.write(key: userCacheKey, value: user);
       return user;
     });
   }
 
   /// Returns the current cached user.
-  /// Defaults to [User.empty] if there is no cached user.
+  /// Defaults to [ScoreboardUser.anonymous] if there is no cached user.
   @override
   ScoreboardUser get currentUser {
-    return cachedUser?.toUser ?? ScoreboardUser.empty;
+    return _cache.read<ScoreboardUser>(key: userCacheKey) ?? ScoreboardUser.anonymous;
   }
 
   /// Creates a new user with the provided [email] and [password].
@@ -119,13 +125,12 @@ class AuthenticationRepository implements Authentication {
   }
 
   /// Signs out the current user which will emit
-  /// [ScoreboardUser.empty] from the [user] Stream.
+  /// [ScoreboardUser.anonymous] from the [user] Stream.
   ///
   /// Throws a [LogOutFailure] if an exception occurs.
   @override
   Future<void> logOut() async {
     try {
-      cachedUser = null;
       await Future.wait([
         _firebaseAuth.signOut(),
         _googleSignIn.signOut(),

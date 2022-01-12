@@ -16,14 +16,14 @@ class ScoreboardUser extends Equatable {
   /// The current user's name (display name).
   final String? name;
 
-  /// Empty user which represents an unauthenticated user.
-  static const empty = ScoreboardUser(id: '');
+  /// Anonymous user which represents an unauthenticated user.
+  static const anonymous = ScoreboardUser(id: '');
 
-  /// Convenience getter to determine whether the current user is empty.
-  bool get isEmpty => this == ScoreboardUser.empty;
+  /// Convenience getter to determine whether the current user is anonymous.
+  bool get isAnonymous => this == ScoreboardUser.anonymous;
 
-  /// Convenience getter to determine whether the current user is not empty.
-  bool get isNotEmpty => this != ScoreboardUser.empty;
+  /// Convenience getter to determine whether the current user is not anonymous.
+  bool get isNotAnonymous => this != ScoreboardUser.anonymous;
 
   @override
   List<Object?> get props => [email, id, name];

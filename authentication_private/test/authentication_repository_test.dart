@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:authentication_private/authentication_private.dart';
+import 'package:authentication_private/src/cache_client.dart';
 import 'package:authentication_public/src/scoreboard_user.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
@@ -20,6 +21,8 @@ mixin LegacyEquality {
   @override
   int get hashCode => 0;
 }
+
+class MockCacheClient extends Mock implements CacheClient {}
 
 class MockFirebaseAuth extends Mock implements firebase_auth.FirebaseAuth {}
 
@@ -48,6 +51,7 @@ void main() {
   );
 
   group('AuthenticationRepository', () {
+    late CacheClient cache;
     late firebase_auth.FirebaseAuth firebaseAuth;
     late GoogleSignIn googleSignIn;
     late AuthenticationRepository authenticationRepository;
@@ -58,9 +62,11 @@ void main() {
     });
 
     setUp(() {
+      cache = MockCacheClient();
       firebaseAuth = MockFirebaseAuth();
       googleSignIn = MockGoogleSignIn();
       authenticationRepository = AuthenticationRepository(
+        cache: cache,
         firebaseAuth: firebaseAuth,
         googleSignIn: googleSignIn,
       );
@@ -244,7 +250,33 @@ void main() {
       });
     });
 
-    group('user', () {});
+    group('user', () {
+      test('emits User.empty when firebase user is null', () async {
+        when(() => firebaseAuth.authStateChanges()).thenAnswer((_) => Stream.value(null));
+        await expectLater(
+          authenticationRepository.user,
+          emitsInOrder(const <ScoreboardUser>[ScoreboardUser.anonymous]),
+        );
+      });
+
+      test('emits User when firebase user is not null', () async {
+        final firebaseUser = MockFirebaseUser();
+        when(() => firebaseUser.uid).thenReturn(_mockFirebaseUserUid);
+        when(() => firebaseUser.email).thenReturn(_mockFirebaseUserEmail);
+        when(() => firebaseUser.photoURL).thenReturn(null);
+        when(() => firebaseAuth.authStateChanges()).thenAnswer((_) => Stream.value(firebaseUser));
+        await expectLater(
+          authenticationRepository.user,
+          emitsInOrder(const <ScoreboardUser>[user]),
+        );
+        verify(
+          () => cache.write(
+            key: AuthenticationRepository.userCacheKey,
+            value: user,
+          ),
+        ).called(1);
+      });
+    });
 
     group('currentUser', () {});
 

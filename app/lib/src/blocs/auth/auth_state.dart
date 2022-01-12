@@ -7,7 +7,7 @@ enum AuthStatus {
 
 @immutable
 class AuthState extends Equatable {
-  const AuthState._({required this.status, this.user = ScoreboardUser.empty});
+  const AuthState._({required this.status, this.user = ScoreboardUser.anonymous});
 
   const AuthState.authenticated(ScoreboardUser user) : this._(status: AuthStatus.authenticated, user: user);
 

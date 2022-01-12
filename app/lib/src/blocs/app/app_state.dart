@@ -8,7 +8,7 @@ enum AppStatus {
 class AppState extends Equatable {
   const AppState._({
     required this.status,
-    this.user = ScoreboardUser.empty,
+    this.user = ScoreboardUser.anonymous,
   });
 
   const AppState.authenticated(ScoreboardUser user) : this._(status: AppStatus.authenticated, user: user);

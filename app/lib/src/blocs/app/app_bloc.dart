@@ -12,7 +12,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   AppBloc({required Authentication authenticationRepository})
       : _authenticationRepository = authenticationRepository,
         super(
-          authenticationRepository.currentUser.isNotEmpty
+          authenticationRepository.currentUser.isNotAnonymous
               ? AppState.authenticated(authenticationRepository.currentUser)
               : const AppState.unauthenticated(),
         ) {
@@ -27,7 +27,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   late final StreamSubscription<ScoreboardUser> _userSubscription;
 
   void _onUserChanged(AppUserChanged event, Emitter<AppState> emit) {
-    emit(event.user.isNotEmpty ? AppState.authenticated(event.user) : const AppState.unauthenticated());
+    emit(event.user.isNotAnonymous ? AppState.authenticated(event.user) : const AppState.unauthenticated());
   }
 
   void _onLogoutRequested(AppLogoutRequested event, Emitter<AppState> emit) {

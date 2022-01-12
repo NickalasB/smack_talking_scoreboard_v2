@@ -4,7 +4,7 @@ import 'package:smack_talking_scoreboard_v2/src/blocs/auth/auth_bloc.dart';
 
 void main() {
   group('AuthState', () {
-    const user1 = ScoreboardUser.empty;
+    const user1 = ScoreboardUser.anonymous;
     const user2 = ScoreboardUser(id: '123');
 
     test('AuthState should have value-type equality', () {
