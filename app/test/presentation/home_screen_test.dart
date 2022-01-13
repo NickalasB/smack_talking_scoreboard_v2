@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:smack_talking_scoreboard_v2/main.dart';
 import 'package:smack_talking_scoreboard_v2/src/blocs/app/app_bloc.dart';
-import 'package:smack_talking_scoreboard_v2/src/main.dart';
 import 'package:smack_talking_scoreboard_v2/src/presentation/screens/home_screen.dart';
 
 import '../test_helpers.dart';

@@ -7,8 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smack_talking_scoreboard_v2/firebase/firebase_options.dart';
 import 'package:smack_talking_scoreboard_v2/src/routes/routes.dart';
 
-import '../src/blocs/app/app_bloc.dart';
-import 'blocs/app_bloc_observer.dart';
+import 'src/blocs/app/app_bloc.dart';
+import 'src/blocs/app_bloc_observer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
