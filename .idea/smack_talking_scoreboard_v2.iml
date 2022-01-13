@@ -15,6 +15,9 @@
       <excludeFolder url="file://$MODULE_DIR$/app/build" />
       <excludeFolder url="file://$MODULE_DIR$/app/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/app/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/authentication_private/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/authentication_private/build" />
+      <excludeFolder url="file://$MODULE_DIR$/authentication_private/.pub" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Dart SDK" level="project" />
