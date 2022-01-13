@@ -10,7 +10,6 @@
 .svn/
 
 # IntelliJ related
-*.iml
 *.ipr
 *.iws
 **/.idea/workspace.xml
@@ -46,7 +45,6 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
-# Android Studio will place build artifacts here
-/app/android/app/debug
-/app/android/app/profile
-/app/android/app/release
+# Android related
+**/android/*.iml
+
