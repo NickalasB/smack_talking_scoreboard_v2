@@ -35,6 +35,17 @@ clean() {
     cd $dir
 }
 
+coverage() {
+  local dir=$(pwd)
+  while read data; do
+    echo "testing $data ..."
+    cd "$dir/$data"
+    flutter test --coverage --null-assertions
+#    genhtml coverage/lcov.info -o coverage/html
+  done
+  cd $dir
+}
+
 CMD_NAME=$1
 if [ $CMD_NAME = 'test' ]
 then
