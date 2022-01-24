@@ -11,7 +11,8 @@ class FirestoreRepository implements Firestore {
   final FirebaseFirestore _firebaseFirestore;
   final String userEmail;
 
-  CollectionReference<Game> get _userGamesCollectionRef {
+  @visibleForTesting
+  CollectionReference<Game> get userGamesCollectionRef {
     return _firebaseFirestore.collection('users').doc(userEmail).collection('games').withConverter<Game>(
           fromFirestore: (snapshot, _) => Game.fromJson(snapshot.data()!),
           toFirestore: (model, _) => model.toJson(),
@@ -23,7 +24,7 @@ class FirestoreRepository implements Firestore {
 
   @override
   Future<void> createUserGame(int pin) async {
-    gameRef = _userGamesCollectionRef.doc(pin.toString());
+    gameRef = userGamesCollectionRef.doc(pin.toString());
     gameRef!.set(const Game());
   }
 
@@ -40,5 +41,8 @@ class FirestoreRepository implements Firestore {
   Future<void> updateP2Name(String name) => gameRef!.update({'p2Name': name});
 
   @override
-  Future<Game?> fetchGame(int pin) async => (await _userGamesCollectionRef.doc(pin.toString()).get()).data();
+  Future<Game?> fetchGame(int pin) async => (await userGamesCollectionRef.doc(pin.toString()).get().then((value) {
+        gameRef = userGamesCollectionRef.doc(pin.toString());
+        return value.data();
+      }));
 }

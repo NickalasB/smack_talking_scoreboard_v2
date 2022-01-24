@@ -53,6 +53,22 @@ void main() {
     expect(await repo.fetchGame(111), const Game());
   });
 
+  test('Should set gameRef when fetchGame called', () async {
+    final fakeFireStore = FakeFirebaseFirestore();
+    final repo = FirestoreRepository(
+      userEmail: 'test@test.com',
+      firebaseFirestore: fakeFireStore,
+    );
+
+    expect(repo.gameRef, isNull);
+
+    repo.userGamesCollectionRef.doc('1234').set(const Game(p1Name: 'anything'));
+    await repo.fetchGame(1234);
+
+    expect(repo.gameRef, isNot(isNull));
+    expect(await repo.fetchGame(1234), const Game(p1Name: 'anything'));
+  });
+
   test('Should properly update scores and names', () async {
     final fakeFireStore = FakeFirebaseFirestore();
     final repo = FirestoreRepository(
