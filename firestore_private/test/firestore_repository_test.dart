@@ -69,6 +69,33 @@ void main() {
     expect(await repo.fetchGame(1234), const Game(p1Name: 'anything'));
   });
 
+  test('Should be able to update game after fetchGame called', () async {
+    final fakeFireStore = FakeFirebaseFirestore();
+    final repo = FirestoreRepository(
+      userEmail: 'test@test.com',
+      firebaseFirestore: fakeFireStore,
+    );
+
+    repo.userGamesCollectionRef.doc('1234').set(const Game());
+    await repo.fetchGame(1234);
+
+    expect(await repo.fetchGame(1234), const Game());
+    await repo.updateP1Name('Bill');
+    await repo.updateP2Name('Phil');
+    await repo.updateP1Score(1);
+    await repo.updateP2Score(2);
+
+    expect(
+      await repo.fetchGame(1234),
+      const Game(
+        p1Name: 'Bill',
+        p2Name: 'Phil',
+        p1Score: 1,
+        p2Score: 2,
+      ),
+    );
+  });
+
   test('Should properly update scores and names', () async {
     final fakeFireStore = FakeFirebaseFirestore();
     final repo = FirestoreRepository(
