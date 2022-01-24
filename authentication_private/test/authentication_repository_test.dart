@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:authentication_private/authentication_private.dart';
-import 'package:authentication_private/src/cache_client.dart';
 import 'package:authentication_public/src/scoreboard_user.dart';
+import 'package:cache_client/cache_client.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';

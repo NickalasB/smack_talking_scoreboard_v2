@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:authentication_public/authentication_public.dart';
+import 'package:cache_client/cache_client.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
@@ -9,7 +10,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'auth_exceptions.dart';
-import 'cache_client.dart';
 
 /// Repository which manages user authentication.
 class AuthenticationRepository implements Authentication {
