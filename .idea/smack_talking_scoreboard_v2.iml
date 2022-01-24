@@ -24,6 +24,9 @@
       <excludeFolder url="file://$MODULE_DIR$/firestore_public/build" />
       <excludeFolder url="file://$MODULE_DIR$/firestore_public/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/firestore_public/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/cache_client/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/cache_client/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/cache_client/build" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Dart SDK" level="project" />
