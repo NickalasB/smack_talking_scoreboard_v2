@@ -1,4 +1,5 @@
 import 'package:cache_client/src/cache_client.dart';
+import 'package:cache_client/src/fake_cache_client.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -10,6 +11,18 @@ void main() {
       expect(cache.read(key: key), isNull);
       cache.write(key: key, value: value);
       expect(cache.read(key: key), equals(value));
+    });
+  });
+
+  group('FakeCacheClient', () {
+    test('FakeCache can write and read a value for a given key', () {
+      final fakeCache = FakeCacheClient();
+      fakeCache.cacheEntry = 'fakeEntry';
+      const key = 'key';
+
+      fakeCache.write<String>(key: key, value: fakeCache.cacheEntry);
+
+      expect(fakeCache.read(key: key), equals('fakeEntry'));
     });
   });
 }
