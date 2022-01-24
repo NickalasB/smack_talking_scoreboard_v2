@@ -17,10 +17,9 @@ void main() {
   group('FakeCacheClient', () {
     test('FakeCache can write and read a value for a given key', () {
       final fakeCache = FakeCacheClient();
-      fakeCache.cacheEntry = 'fakeEntry';
       const key = 'key';
 
-      fakeCache.write<String>(key: key, value: fakeCache.cacheEntry);
+      fakeCache.write<String>(key: key, value: 'fakeEntry');
 
       expect(fakeCache.read(key: key), equals('fakeEntry'));
     });
