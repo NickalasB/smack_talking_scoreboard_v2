@@ -15,7 +15,7 @@ class FirestoreRepository implements Firestore {
   CollectionReference<Game> get userGamesCollectionRef {
     return _firebaseFirestore.collection('users').doc(userEmail).collection('games').withConverter<Game>(
           fromFirestore: (snapshot, _) => Game.fromJson(snapshot.data()!),
-          toFirestore: (model, _) => model.toJson(),
+          toFirestore: (game, _) => game.toJson(),
         );
   }
 
