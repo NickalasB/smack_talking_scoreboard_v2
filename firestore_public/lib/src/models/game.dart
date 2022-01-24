@@ -15,6 +15,20 @@ class Game extends Equatable {
   final int p1Score;
   final int p2Score;
 
+  Game copyWith({
+    String? p1Name,
+    String? p2Name,
+    int? p1Score,
+    int? p2Score,
+  }) {
+    return Game(
+      p1Name: p1Name ?? this.p1Name,
+      p2Name: p2Name ?? this.p2Name,
+      p1Score: p1Score ?? this.p1Score,
+      p2Score: p2Score ?? this.p2Score,
+    );
+  }
+
   Game.fromJson(Map<String, dynamic> json)
       : p1Name = json['p1Name'],
         p2Name = json['p2Name'],
