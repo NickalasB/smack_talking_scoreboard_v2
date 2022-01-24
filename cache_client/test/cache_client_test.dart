@@ -1,12 +1,15 @@
+import 'package:cache_client/src/cache_client.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:cache_client/cache_client.dart';
-
 void main() {
-  test('adds one to input values', () {
-    final calculator = Calculator();
-    expect(calculator.addOne(2), 3);
-    expect(calculator.addOne(-7), -6);
-    expect(calculator.addOne(0), 1);
+  group('CacheClient', () {
+    test('can write and read a value for a given key', () {
+      final cache = CacheClient();
+      const key = '__key__';
+      const value = '__value__';
+      expect(cache.read(key: key), isNull);
+      cache.write(key: key, value: value);
+      expect(cache.read(key: key), equals(value));
+    });
   });
 }
