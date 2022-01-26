@@ -3,8 +3,10 @@ on: [push, workflow_dispatch]
 jobs:
   app_tests:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
     steps:
       - uses: actions/checkout@v1
       - uses: subosito/flutter-action@v1
       - run: flutter test
-        working-directory: app
