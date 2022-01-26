@@ -1,9 +1,10 @@
 name: test-my-app
 on: [push, workflow_dispatch]
 jobs:
-  drive:
+  app_tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - uses: subosito/flutter-action@v1
       - run: flutter test
+        working-directory: app
