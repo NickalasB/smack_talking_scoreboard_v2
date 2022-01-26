@@ -1,7 +1,7 @@
 name: test-my-app
 on: [push, workflow_dispatch]
 jobs:
-  app_tests:
+  all_tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
