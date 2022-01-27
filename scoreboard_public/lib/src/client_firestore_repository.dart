@@ -1,6 +1,6 @@
-import '../firestore_public.dart';
+import '../scoreboard_public.dart';
 
-abstract class Firestore {
+abstract class ClientFirestoreRepository {
   Future<void> createUserGame(int pin);
 
   Future<void> updateP1Score(int score);

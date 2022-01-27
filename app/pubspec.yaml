@@ -22,8 +22,8 @@ dependencies:
   firebase_core: ^1.10.6
   firestore_private:
     path: ../firestore_private
-  firestore_public:
-    path: ../firestore_public
+  scoreboard_public:
+    path: ../scoreboard_public
   flow_builder: ^0.0.6
   flutter:
     sdk: flutter
