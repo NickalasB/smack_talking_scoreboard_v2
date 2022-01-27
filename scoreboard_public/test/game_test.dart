@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:firestore_public/firestore_public.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scoreboard_public/scoreboard_public.dart';
 
 void main() {
   group('Game model tests', () {

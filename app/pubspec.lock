@@ -225,20 +225,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.3"
-  firestore_private:
-    dependency: "direct main"
-    description:
-      path: "../firestore_private"
-      relative: true
-    source: path
-    version: "0.0.1"
-  firestore_public:
-    dependency: "direct main"
-    description:
-      path: "../firestore_public"
-      relative: true
-    source: path
-    version: "0.0.1"
   flow_builder:
     dependency: "direct main"
     description:
@@ -492,6 +478,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.27.3"
+  scoreboard_private:
+    dependency: "direct main"
+    description:
+      path: "../scoreboard_private"
+      relative: true
+    source: path
+    version: "0.0.1"
+  scoreboard_public:
+    dependency: "direct main"
+    description:
+      path: "../scoreboard_public"
+      relative: true
+    source: path
+    version: "0.0.1"
   shelf:
     dependency: transitive
     description:

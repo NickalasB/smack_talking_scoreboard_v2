@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firestore_public/firestore_public.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:scoreboard_public/scoreboard_public.dart';
 
-class FirestoreRepository implements Firestore {
+class FirestoreRepository implements ClientFirestoreRepository {
   FirestoreRepository({
     FirebaseFirestore? firebaseFirestore,
     required this.userEmail,
@@ -13,7 +13,11 @@ class FirestoreRepository implements Firestore {
 
   @visibleForTesting
   CollectionReference<Game> get userGamesCollectionRef {
-    return _firebaseFirestore.collection('users').doc(userEmail).collection('games').withConverter<Game>(
+    return _firebaseFirestore
+        .collection('users')
+        .doc(userEmail)
+        .collection('games')
+        .withConverter<Game>(
           fromFirestore: (snapshot, _) => Game.fromJson(snapshot.data()!),
           toFirestore: (game, _) => game.toJson(),
         );
@@ -41,7 +45,8 @@ class FirestoreRepository implements Firestore {
   Future<void> updateP2Name(String name) => gameRef!.update({'p2Name': name});
 
   @override
-  Future<Game?> fetchGame(int pin) async => (await userGamesCollectionRef.doc(pin.toString()).get().then((value) {
+  Future<Game?> fetchGame(int pin) async =>
+      (await userGamesCollectionRef.doc(pin.toString()).get().then((value) {
         gameRef = userGamesCollectionRef.doc(pin.toString());
         return value.data();
       }));
