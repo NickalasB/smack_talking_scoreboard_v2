@@ -20,8 +20,8 @@ dependencies:
   equatable: ^2.0.3
   fake_cloud_firestore: ^1.2.0
   firebase_core: ^1.10.6
-  firestore_private:
-    path: ../firestore_private
+  scoreboard_private:
+    path: ../scoreboard_private
   scoreboard_public:
     path: ../scoreboard_public
   flow_builder: ^0.0.6

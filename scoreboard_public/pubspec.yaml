@@ -9,8 +9,8 @@ environment:
 
 dependencies:
   equatable: ^2.0.3
-  firestore_private:
-    path: ../firestore_private
+  scoreboard_private:
+    path: ../scoreboard_private
   flutter:
     sdk: flutter
 

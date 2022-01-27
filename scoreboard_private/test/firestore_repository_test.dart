@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firestore_private/src/firestore_repository.dart';
-import 'package:scoreboard_public/scoreboard_public.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scoreboard_private/src/firestore_repository.dart';
+import 'package:scoreboard_public/scoreboard_public.dart';
 
 import 'fake_firebase.dart';
 

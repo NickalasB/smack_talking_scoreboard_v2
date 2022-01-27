@@ -1,4 +1,4 @@
-name: firestore_private
+name: scoreboard_private
 description: A public pacakge for communicating with Firebase Firestore.
 version: 0.0.1
 publish_to: 'none'
