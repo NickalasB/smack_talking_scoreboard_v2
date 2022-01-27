@@ -1,11 +1,18 @@
 import 'package:async/async.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:given_when_then/given_when_then.dart';
 import 'package:result_type/result_type.dart';
+import 'package:scoreboard_private/firestore_private.dart';
 import 'package:scoreboard_public/src/scoreboard_bloc.dart';
 
 void main() {
+  setUp(() {
+    Firebase.delegatePackingProperty = FakeFirebase();
+  });
+
   group('ScoreboardEvents', () {
     test('UpdateScoreEvent should have value-type equality', () {
       expect(const UpdateScoreEvent(1), equals(const UpdateScoreEvent(1)));
@@ -56,14 +63,17 @@ void main() {
 class _Harness {
   late ScoreboardBloc scoreboardBloc;
   late StreamQueue<ScoreboardState> stateQueue;
-  late FakeFirebaseFirestore fakeFirebaseFirestore;
+  late FirestoreRepository firestoreRepo;
 }
 
 Future<void> Function() harness(UnitTestHarnessCallback<_Harness> callback) {
   final harness = _Harness();
-  harness.fakeFirebaseFirestore = FakeFirebaseFirestore();
+  harness.firestoreRepo = FirestoreRepository(
+    firebaseFirestore: FakeFirebaseFirestore(),
+    userEmail: 'test@123.com',
+  );
 
-  harness.scoreboardBloc = ConcreteScoreboardBloc(harness.fakeFirebaseFirestore);
+  harness.scoreboardBloc = ConcreteScoreboardBloc(harness.firestoreRepo);
 
   harness.stateQueue = StreamQueue<ScoreboardState>(harness.scoreboardBloc.stream);
 
@@ -88,3 +98,19 @@ extension on UnitTestThen<_Harness> {
 }
 
 Future<void> tick() => Future.microtask(() {});
+
+class FakeFirebase extends FirebasePlatform {
+  FakeFirebase();
+  @override
+  FirebaseAppPlatform app([String name = defaultFirebaseAppName]) {
+    return FirebaseAppPlatform(
+      'test',
+      const FirebaseOptions(
+        appId: 'test',
+        projectId: '1234',
+        apiKey: '321',
+        messagingSenderId: 'anything',
+      ),
+    );
+  }
+}

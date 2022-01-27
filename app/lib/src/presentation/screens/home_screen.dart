@@ -2,18 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scoreboard_public/src/scoreboard_bloc.dart';
+import 'package:scoreboard_private/firestore_private.dart';
+import 'package:scoreboard_public/scoreboard_public.dart';
 import 'package:smack_talking_scoreboard_v2/src/blocs/app/app_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
     Key? key,
-    required this.firestore,
   }) : super(key: key);
 
-  final FirebaseFirestore firestore;
-
-  static Page page() => MaterialPage<void>(child: HomeScreen(firestore: FirebaseFirestore.instance));
+  static Page page() => const MaterialPage<void>(child: HomeScreen());
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +20,15 @@ class HomeScreen extends StatelessWidget {
     final user = context.select((AppBloc bloc) => bloc.state.user);
 
     return BlocProvider<ConcreteScoreboardBloc>(
-      create: (context) => ConcreteScoreboardBloc(firestore),
+      create: (context) => ConcreteScoreboardBloc(
+        FirestoreRepository(
+          firebaseFirestore: FirebaseFirestore.instance,
+          userEmail: user.email ?? '',
+        ),
+      ),
       child: Builder(builder: (context) {
         return Scaffold(
-          appBar: AppBar(title: Text('Smack Talking Scoreboard'), actions: <Widget>[
+          appBar: AppBar(title: const Text('Smack Talking Scoreboard'), actions: <Widget>[
             IconButton(
               key: const Key('homePage_logout_iconButton'),
               icon: const Icon(Icons.exit_to_app),
