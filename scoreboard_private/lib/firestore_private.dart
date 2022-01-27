@@ -1,4 +1,4 @@
-library firestore_private;
+library scoreboard_private;
 
 /// A Calculator.
 class Calculator {

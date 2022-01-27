@@ -1,4 +1,4 @@
-name: firestore_private
+name: scoreboard_private
 description: A public pacakge for communicating with Firebase Firestore.
 version: 0.0.1
 publish_to: 'none'
@@ -10,8 +10,8 @@ environment:
 dependencies:
   cloud_firestore: ^3.1.6
   fake_cloud_firestore: ^1.2.0
-  firestore_public:
-    path: ../firestore_public
+  scoreboard_public:
+    path: ../scoreboard_public
   flutter:
     sdk: flutter
 

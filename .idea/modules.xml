@@ -2,13 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/smack_talking_scoreboard_v2.iml" filepath="$PROJECT_DIR$/.idea/smack_talking_scoreboard_v2.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/authentication_private/authentication_private.iml" filepath="$PROJECT_DIR$/authentication_private/authentication_private.iml" />
       <module fileurl="file://$PROJECT_DIR$/authentication_public/authentication_public.iml" filepath="$PROJECT_DIR$/authentication_public/authentication_public.iml" />
-      <module fileurl="file://$PROJECT_DIR$/firestore_private/firestore_private.iml" filepath="$PROJECT_DIR$/firestore_private/firestore_private.iml" />
-      <module fileurl="file://$PROJECT_DIR$/firestore_public/firestore_public.iml" filepath="$PROJECT_DIR$/firestore_public/firestore_public.iml" />
       <module fileurl="file://$PROJECT_DIR$/cache_client/cache_client.iml" filepath="$PROJECT_DIR$/cache_client/cache_client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/scoreboard_private/scoreboard_private.iml" filepath="$PROJECT_DIR$/scoreboard_private/scoreboard_private.iml" />
+      <module fileurl="file://$PROJECT_DIR$/scoreboard_public/scoreboard_public.iml" filepath="$PROJECT_DIR$/scoreboard_public/scoreboard_public.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/smack_talking_scoreboard_v2.iml" filepath="$PROJECT_DIR$/.idea/smack_talking_scoreboard_v2.iml" />
     </modules>
   </component>
 </project>
