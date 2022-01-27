@@ -5,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 import 'package:result_type/result_type.dart';
 
-part 'scoreboard_event.dart';
-part 'scoreboard_state.dart';
+part './scoreboard_event.dart';
+part './scoreboard_state.dart';
 
 typedef ScoreboardBloc = Bloc<ScoreboardEvent, ScoreboardState>;
 

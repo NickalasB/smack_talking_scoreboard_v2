@@ -1,4 +1,4 @@
-part of 'scoreboard_bloc.dart';
+part of './scoreboard_bloc.dart';
 
 enum Status { unknown, loading, loaded }
 
