@@ -4,7 +4,7 @@ version: 0.0.1
 publish_to: 'none'
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.14.0 <3.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
@@ -13,10 +13,13 @@ dependencies:
     path: ../scoreboard_private
   flutter:
     sdk: flutter
+  flutter_bloc: ^8.0.0
+  result_type: ^0.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^1.0.0
+  given_when_then: ^0.2.0
 
 flutter:

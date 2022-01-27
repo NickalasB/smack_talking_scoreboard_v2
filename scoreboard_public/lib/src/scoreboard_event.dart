@@ -1,4 +1,4 @@
-part of 'scoreboard_bloc.dart';
+part of './scoreboard_bloc.dart';
 
 @immutable
 abstract class ScoreboardEvent extends Equatable {
