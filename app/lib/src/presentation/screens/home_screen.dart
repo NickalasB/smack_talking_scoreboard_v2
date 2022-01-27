@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scoreboard_public/src/scoreboard_bloc.dart';
 import 'package:smack_talking_scoreboard_v2/src/blocs/app/app_bloc.dart';
-import 'package:smack_talking_scoreboard_v2/src/blocs/scoreboard/scoreboard_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
