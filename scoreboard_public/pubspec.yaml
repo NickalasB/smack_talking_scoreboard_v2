@@ -17,9 +17,11 @@ dependencies:
   result_type: ^0.1.0
 
 dev_dependencies:
+  cloud_firestore: ^3.1.6
   flutter_test:
     sdk: flutter
   flutter_lints: ^1.0.0
+  mocktail: ^0.2.0
   given_when_then: ^0.2.0
 
 flutter:
