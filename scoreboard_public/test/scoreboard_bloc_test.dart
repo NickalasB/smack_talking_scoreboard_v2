@@ -18,34 +18,6 @@ void main() {
     Firebase.delegatePackingProperty = FakeFirebase();
   });
 
-  group('ScoreboardEvents', () {
-    test('UpdateP1ScoreEvent should have value-type equality', () {
-      expect(const UpdateP1ScoreEvent(1), equals(const UpdateP1ScoreEvent(1)));
-      expect(const UpdateP1ScoreEvent(1), isNot(equals(const UpdateP1ScoreEvent(2))));
-    });
-  });
-
-  group('ScoreboardState', () {
-    test('ScoreboardState should have value-type equality', () {
-      expect(
-        ScoreboardState(status: Status.loading, scoreResult: Success(1)),
-        equals(ScoreboardState(status: Status.loading, scoreResult: Success(1))),
-      );
-
-      //result
-      expect(
-        ScoreboardState(scoreResult: Success(1)),
-        isNot(equals(ScoreboardState(scoreResult: Success(2)))),
-      );
-
-      //status
-      expect(
-        const ScoreboardState(status: Status.loading),
-        isNot(equals(const ScoreboardState(status: Status.loaded))),
-      );
-    });
-  });
-
   group('ScoreboardBloc', () {
     test('Initial state should be of status: unknown and result null', harness((given, when, then) async {
       given.scoreboardBlocSetUp();
