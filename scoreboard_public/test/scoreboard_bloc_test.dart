@@ -56,7 +56,7 @@ void main() {
         then.score(equals(0));
       }));
 
-      test('Should emit failure score when UpdateScoreEvent fails', harness((given, when, then) async {
+      test('Should emit failure score when UpdateP1ScoreEvent fails', harness((given, when, then) async {
         given.scoreboardBlocSetUp(withMockRepo: true);
         mock.when(() => when.harness.firestoreRepo.createUserGame(123)).thenAnswer((invocation) async {});
         mock
@@ -65,6 +65,29 @@ void main() {
 
         await when.add(const UpdateP1ScoreEvent(1));
         expect(then.state, ScoreboardState(status: Status.unknown, scoreResult: Failure('Failed to update p1Score')));
+      }));
+    });
+
+    group('UpdateP2ScoreEvent', () {
+      test('Should emit new score when UpdateP2ScoreEvent successfully added', harness((given, when, then) async {
+        given.scoreboardBlocSetUp();
+        await given.gameCreated();
+        await when.add(const UpdateP2ScoreEvent(1));
+        then.score(equals(1));
+
+        await when.add(const UpdateP2ScoreEvent(0));
+        then.score(equals(0));
+      }));
+
+      test('Should emit failure score when UpdateP2ScoreEvent fails', harness((given, when, then) async {
+        given.scoreboardBlocSetUp(withMockRepo: true);
+        mock.when(() => when.harness.firestoreRepo.createUserGame(123)).thenAnswer((invocation) async {});
+        mock
+            .when(() => when.harness.firestoreRepo.updateScore(playerPosition: 1, score: 1))
+            .thenThrow(() => Exception());
+
+        await when.add(const UpdateP2ScoreEvent(1));
+        expect(then.state, ScoreboardState(status: Status.unknown, scoreResult: Failure('Failed to update p2Score')));
       }));
     });
   });

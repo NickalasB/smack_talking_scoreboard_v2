@@ -15,7 +15,8 @@ class ConcreteScoreboardBloc extends Bloc<ScoreboardEvent, ScoreboardState> {
       : _firestore = firestore,
         super(const ScoreboardState()) {
     on<CreateUserGameEvent>(_createUserGame);
-    on<UpdateP1ScoreEvent>(_emitScoreChanged);
+    on<UpdateP1ScoreEvent>(_emitP1ScoreChanged);
+    on<UpdateP2ScoreEvent>(_emitP2ScoreChanged);
   }
   final FirestoreRepository _firestore;
 
@@ -28,12 +29,21 @@ class ConcreteScoreboardBloc extends Bloc<ScoreboardEvent, ScoreboardState> {
     }
   }
 
-  void _emitScoreChanged(UpdateP1ScoreEvent event, Emitter<ScoreboardState> emit) async {
+  void _emitP1ScoreChanged(UpdateP1ScoreEvent event, Emitter<ScoreboardState> emit) async {
     try {
       _firestore.updateScore(playerPosition: 1, score: event.score);
       emit(ScoreboardState(status: Status.loaded, scoreResult: Success(event.score)));
     } catch (e) {
       emit(ScoreboardState(status: Status.unknown, scoreResult: Failure('Failed to update p1Score')));
+    }
+  }
+
+  void _emitP2ScoreChanged(UpdateP2ScoreEvent event, Emitter<ScoreboardState> emit) async {
+    try {
+      _firestore.updateScore(playerPosition: 2, score: event.score);
+      emit(ScoreboardState(status: Status.loaded, scoreResult: Success(event.score)));
+    } catch (e) {
+      emit(ScoreboardState(status: Status.unknown, scoreResult: Failure('Failed to update p2Score')));
     }
   }
 }

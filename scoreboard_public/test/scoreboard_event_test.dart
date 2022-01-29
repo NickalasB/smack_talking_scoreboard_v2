@@ -8,6 +8,11 @@ void main() {
       expect(const UpdateP1ScoreEvent(1), isNot(equals(const UpdateP1ScoreEvent(2))));
     });
 
+    test('UpdateP2ScoreEvent should have value-type equality', () {
+      expect(const UpdateP2ScoreEvent(1), equals(const UpdateP2ScoreEvent(1)));
+      expect(const UpdateP2ScoreEvent(1), isNot(equals(const UpdateP2ScoreEvent(2))));
+    });
+
     test('CreateUserGame should have value-type equality', () {
       expect(const CreateUserGameEvent(1), equals(const CreateUserGameEvent(1)));
       expect(const CreateUserGameEvent(1), isNot(equals(const CreateUserGameEvent(2))));
