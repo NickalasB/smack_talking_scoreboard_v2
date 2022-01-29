@@ -34,3 +34,21 @@ class UpdateP2ScoreEvent extends ScoreboardEvent {
   @override
   List<Object?> get props => [score];
 }
+
+class UpdateP1NameEvent extends ScoreboardEvent {
+  const UpdateP1NameEvent(this.name);
+
+  final String name;
+
+  @override
+  List<Object?> get props => [name];
+}
+
+class UpdateP2NameEvent extends ScoreboardEvent {
+  const UpdateP2NameEvent(this.name);
+
+  final String name;
+
+  @override
+  List<Object?> get props => [name];
+}
