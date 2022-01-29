@@ -13,11 +13,7 @@ class FirestoreRepository implements ClientFirestoreRepository {
 
   @visibleForTesting
   CollectionReference<Game> get userGamesCollectionRef {
-    return _firebaseFirestore
-        .collection('users')
-        .doc(userEmail)
-        .collection('games')
-        .withConverter<Game>(
+    return _firebaseFirestore.collection('users').doc(userEmail).collection('games').withConverter<Game>(
           fromFirestore: (snapshot, _) => Game.fromJson(snapshot.data()!),
           toFirestore: (game, _) => game.toJson(),
         );
@@ -33,20 +29,17 @@ class FirestoreRepository implements ClientFirestoreRepository {
   }
 
   @override
-  Future<void> updateP1Score(int score) => gameRef!.update({'p1Score': score});
+  Future<void> updateScore({required int playerPosition, required int score}) {
+    return gameRef!.update({'p${playerPosition}Score': score});
+  }
 
   @override
-  Future<void> updateP2Score(int score) => gameRef!.update({'p2Score': score});
+  Future<void> updateName({required int playerPosition, required String name}) {
+    return gameRef!.update({'p${playerPosition}Name': name});
+  }
 
   @override
-  Future<void> updateP1Name(String name) => gameRef!.update({'p1Name': name});
-
-  @override
-  Future<void> updateP2Name(String name) => gameRef!.update({'p2Name': name});
-
-  @override
-  Future<Game?> fetchGame(int pin) async =>
-      (await userGamesCollectionRef.doc(pin.toString()).get().then((value) {
+  Future<Game?> fetchGame(int pin) async => (await userGamesCollectionRef.doc(pin.toString()).get().then((value) {
         gameRef = userGamesCollectionRef.doc(pin.toString());
         return value.data();
       }));

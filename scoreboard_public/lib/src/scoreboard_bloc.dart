@@ -30,7 +30,7 @@ class ConcreteScoreboardBloc extends Bloc<ScoreboardEvent, ScoreboardState> {
 
   void _emitScoreChanged(UpdateP1ScoreEvent event, Emitter<ScoreboardState> emit) async {
     try {
-      _firestore.updateP1Score(1);
+      _firestore.updateScore(playerPosition: 1, score: event.score);
       emit(ScoreboardState(status: Status.loaded, scoreResult: Success(event.score)));
     } catch (e) {
       emit(ScoreboardState(status: Status.unknown, scoreResult: Failure('Failed to update p1Score')));

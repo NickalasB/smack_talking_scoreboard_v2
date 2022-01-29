@@ -80,10 +80,10 @@ void main() {
     await repo.fetchGame(1234);
 
     expect(await repo.fetchGame(1234), const Game());
-    await repo.updateP1Name('Bill');
-    await repo.updateP2Name('Phil');
-    await repo.updateP1Score(1);
-    await repo.updateP2Score(2);
+    await repo.updateName(playerPosition: 1, name: 'Bill');
+    await repo.updateName(playerPosition: 2, name: 'Phil');
+    await repo.updateScore(playerPosition: 1, score: 1);
+    await repo.updateScore(playerPosition: 2, score: 2);
 
     expect(
       await repo.fetchGame(1234),
@@ -105,10 +105,10 @@ void main() {
 
     repo.createUserGame(111);
 
-    expect(repo.updateP1Name('Nick'), completes);
-    expect(repo.updateP2Name('Todd'), completes);
-    expect(repo.updateP1Score(7), completes);
-    expect(repo.updateP2Score(11), completes);
+    expect(repo.updateName(playerPosition: 1, name: 'Nick'), completes);
+    expect(repo.updateName(playerPosition: 2, name: 'Todd'), completes);
+    expect(repo.updateScore(playerPosition: 1, score: 7), completes);
+    expect(repo.updateScore(playerPosition: 2, score: 11), completes);
 
     expect(
         await repo.fetchGame(111),
@@ -129,7 +129,7 @@ void main() {
     Object? exception;
 
     runZonedGuarded(() {
-      expect(repo.updateP1Score(123), throwsA(UnimplementedError()));
+      expect(repo.updateScore(playerPosition: 1, score: 123), throwsA(UnimplementedError()));
     }, (e, s) {
       exception = e;
     });
