@@ -46,6 +46,19 @@ void main() {
       }));
     });
 
+    group('FetchUserGame', () {
+      test('Should emit success and fetched game when FetchGameEvent successfully added',
+          harness((given, when, then) async {
+        given.scoreboardBlocSetUp();
+        await given.gameCreated(pin: 5555);
+
+        await when.add(const FetchGameEvent(pin: 5555));
+        await when.waitNextState();
+
+        expect(then.state, ScoreboardState(status: Status.success, gameResult: Success(const Game().copyWith())));
+      }));
+    });
+
     group('UpdateP1ScoreEvent', () {
       test('Should emit success when UpdateP1ScoreEvent successfully added', harness((given, when, then) async {
         given.scoreboardBlocSetUp();

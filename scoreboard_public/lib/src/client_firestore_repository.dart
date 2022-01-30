@@ -7,5 +7,5 @@ abstract class ClientFirestoreRepository {
 
   Future<void> updateName({required int playerPosition, required String name});
 
-  Future<Game?> fetchGame(int pin);
+  Future<Game> fetchGame(int pin);
 }

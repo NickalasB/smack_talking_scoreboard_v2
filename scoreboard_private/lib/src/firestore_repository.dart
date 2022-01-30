@@ -39,8 +39,8 @@ class FirestoreRepository implements ClientFirestoreRepository {
   }
 
   @override
-  Future<Game?> fetchGame(int pin) async => (await userGamesCollectionRef.doc(pin.toString()).get().then((value) {
+  Future<Game> fetchGame(int pin) async => (await userGamesCollectionRef.doc(pin.toString()).get().then((value) {
         gameRef = userGamesCollectionRef.doc(pin.toString());
-        return value.data();
+        return value.data()!;
       }));
 }

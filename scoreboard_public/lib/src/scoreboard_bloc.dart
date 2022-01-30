@@ -16,6 +16,7 @@ class ConcreteScoreboardBloc extends Bloc<ScoreboardEvent, ScoreboardState> {
       : _firestore = firestore,
         super(const ScoreboardState()) {
     on<CreateUserGameEvent>(_createUserGame);
+    on<FetchGameEvent>(_emitFetchedGame);
 
     on<UpdateP1ScoreEvent>(_emitP1ScoreChanged);
     on<UpdateP2ScoreEvent>(_emitP2ScoreChanged);
@@ -29,6 +30,15 @@ class ConcreteScoreboardBloc extends Bloc<ScoreboardEvent, ScoreboardState> {
     try {
       await _firestore.createUserGame(event.pin);
       emit(const ScoreboardState(status: Status.success));
+    } catch (e) {
+      emit(const ScoreboardState(status: Status.unknown));
+    }
+  }
+
+  void _emitFetchedGame(FetchGameEvent event, Emitter<ScoreboardState> emit) async {
+    try {
+      final fetchedGame = await _firestore.fetchGame(event.pin);
+      emit(ScoreboardState(status: Status.success, gameResult: Success(fetchedGame)));
     } catch (e) {
       emit(const ScoreboardState(status: Status.unknown));
     }

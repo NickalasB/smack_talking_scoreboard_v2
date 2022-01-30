@@ -17,6 +17,15 @@ class CreateUserGameEvent extends ScoreboardEvent {
   List<Object?> get props => [pin];
 }
 
+class FetchGameEvent extends ScoreboardEvent {
+  const FetchGameEvent({required this.pin});
+
+  final int pin;
+
+  @override
+  List<Object?> get props => [pin];
+}
+
 class UpdateP1ScoreEvent extends ScoreboardEvent {
   const UpdateP1ScoreEvent(this.score);
 
