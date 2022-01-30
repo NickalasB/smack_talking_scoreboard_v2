@@ -23,16 +23,16 @@ void main() {
       given.scoreboardBlocSetUp();
       expect(
         given.harness.scoreboardBloc.state,
-        equals(const ScoreboardState(status: Status.unknown, scoreResult: null)),
+        equals(const ScoreboardState(status: Status.unknown, gameResult: null)),
       );
-      then.score(equals(0));
     }));
 
     group('CreateUserGame', () {
       test('Should emit proper state when CreateUserGameEvent added successfully', harness((given, when, then) async {
         given.scoreboardBlocSetUp();
         await when.add(const CreateUserGameEvent(321));
-        expect(then.state, const ScoreboardState(status: Status.loaded));
+        await when.waitNextState();
+        expect(then.state, const ScoreboardState(status: Status.success));
       }));
 
       test('Should emit unknown state when CreateUserGameEvent fails', harness((given, when, then) async {
@@ -41,19 +41,18 @@ void main() {
         mock.when(() => when.harness.firestoreRepo.createUserGame(123)).thenThrow(() => Exception());
 
         await when.add(const CreateUserGameEvent(321));
+        await when.waitNextState();
         expect(then.state, const ScoreboardState(status: Status.unknown));
       }));
     });
 
     group('UpdateP1ScoreEvent', () {
-      test('Should emit new score when UpdateP1ScoreEvent successfully added', harness((given, when, then) async {
+      test('Should emit success when UpdateP1ScoreEvent successfully added', harness((given, when, then) async {
         given.scoreboardBlocSetUp();
         await given.gameCreated();
         await when.add(const UpdateP1ScoreEvent(1));
-        then.score(equals(1));
-
-        await when.add(const UpdateP1ScoreEvent(0));
-        then.score(equals(0));
+        await when.waitNextState();
+        expect(then.state, const ScoreboardState(status: Status.success));
       }));
 
       test('Should emit failure score when UpdateP1ScoreEvent fails', harness((given, when, then) async {
@@ -64,19 +63,18 @@ void main() {
             .thenThrow(() => Exception());
 
         await when.add(const UpdateP1ScoreEvent(1));
-        expect(then.state, ScoreboardState(status: Status.unknown, scoreResult: Failure('Failed to update p1Score')));
+        await when.waitNextState();
+        expect(then.state, ScoreboardState(status: Status.unknown, gameResult: Failure('Failed to update p1Score')));
       }));
     });
 
     group('UpdateP2ScoreEvent', () {
-      test('Should emit new score when UpdateP2ScoreEvent successfully added', harness((given, when, then) async {
+      test('Should emit success when UpdateP2ScoreEvent successfully added', harness((given, when, then) async {
         given.scoreboardBlocSetUp();
         await given.gameCreated();
         await when.add(const UpdateP2ScoreEvent(1));
-        then.score(equals(1));
-
-        await when.add(const UpdateP2ScoreEvent(0));
-        then.score(equals(0));
+        await when.waitNextState();
+        expect(then.state, const ScoreboardState(status: Status.success));
       }));
 
       test('Should emit failure score when UpdateP2ScoreEvent fails', harness((given, when, then) async {
@@ -87,7 +85,30 @@ void main() {
             .thenThrow(() => Exception());
 
         await when.add(const UpdateP2ScoreEvent(1));
-        expect(then.state, ScoreboardState(status: Status.unknown, scoreResult: Failure('Failed to update p2Score')));
+        await when.waitNextState();
+        expect(then.state, ScoreboardState(status: Status.unknown, gameResult: Failure('Failed to update p2Score')));
+      }));
+    });
+
+    group('UpdateP1NameEvent', () {
+      test('Should emit new name when UpdateP1NameEvent successfully added', harness((given, when, then) async {
+        given.scoreboardBlocSetUp();
+        await given.gameCreated();
+        await when.add(const UpdateP1NameEvent('Bill'));
+        await when.waitNextState();
+        then.p1Name(equals(1));
+      }));
+
+      test('Should emit failure when UpdateP1NameEvent fails', harness((given, when, then) async {
+        given.scoreboardBlocSetUp(withMockRepo: true);
+        mock.when(() => when.harness.firestoreRepo.createUserGame(123)).thenAnswer((invocation) async {});
+        mock
+            .when(() => when.harness.firestoreRepo.updateName(playerPosition: 1, name: 'Bill'))
+            .thenThrow(() => Exception());
+
+        await when.add(const UpdateP1NameEvent('Bill'));
+        await when.waitNextState();
+        expect(then.state, ScoreboardState(status: Status.unknown, gameResult: Failure('Failed to update p1Name')));
       }));
     });
   });
@@ -135,7 +156,11 @@ extension on UnitTestThen<_Harness> {
   ScoreboardState get state => this.harness.scoreboardBloc.state;
 
   void score(dynamic matcher) {
-    expect(state.score, matcher);
+    expect(state.p1score, matcher);
+  }
+
+  void p1Name(dynamic matcher) {
+    expect(state.p1Name, matcher);
   }
 }
 

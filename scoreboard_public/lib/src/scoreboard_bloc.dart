@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 import 'package:result_type/result_type.dart';
 import 'package:scoreboard_private/firestore_private.dart';
+import 'package:scoreboard_public/scoreboard_public.dart';
 
 part './scoreboard_event.dart';
 part './scoreboard_state.dart';
@@ -22,8 +23,8 @@ class ConcreteScoreboardBloc extends Bloc<ScoreboardEvent, ScoreboardState> {
 
   void _createUserGame(CreateUserGameEvent event, Emitter<ScoreboardState> emit) async {
     try {
-      _firestore.createUserGame(event.pin);
-      emit(const ScoreboardState(status: Status.loaded));
+      await _firestore.createUserGame(event.pin);
+      emit(const ScoreboardState(status: Status.success));
     } catch (e) {
       emit(const ScoreboardState(status: Status.unknown));
     }
@@ -31,19 +32,19 @@ class ConcreteScoreboardBloc extends Bloc<ScoreboardEvent, ScoreboardState> {
 
   void _emitP1ScoreChanged(UpdateP1ScoreEvent event, Emitter<ScoreboardState> emit) async {
     try {
-      _firestore.updateScore(playerPosition: 1, score: event.score);
-      emit(ScoreboardState(status: Status.loaded, scoreResult: Success(event.score)));
+      await _firestore.updateScore(playerPosition: 1, score: event.score);
+      emit(const ScoreboardState(status: Status.success));
     } catch (e) {
-      emit(ScoreboardState(status: Status.unknown, scoreResult: Failure('Failed to update p1Score')));
+      emit(ScoreboardState(status: Status.unknown, gameResult: Failure('Failed to update p1Score')));
     }
   }
 
   void _emitP2ScoreChanged(UpdateP2ScoreEvent event, Emitter<ScoreboardState> emit) async {
     try {
-      _firestore.updateScore(playerPosition: 2, score: event.score);
-      emit(ScoreboardState(status: Status.loaded, scoreResult: Success(event.score)));
+      await _firestore.updateScore(playerPosition: 2, score: event.score);
+      emit(const ScoreboardState(status: Status.success));
     } catch (e) {
-      emit(ScoreboardState(status: Status.unknown, scoreResult: Failure('Failed to update p2Score')));
+      emit(ScoreboardState(status: Status.unknown, gameResult: Failure('Failed to update p2Score')));
     }
   }
 }
