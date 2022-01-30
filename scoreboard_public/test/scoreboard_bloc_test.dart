@@ -93,10 +93,10 @@ void main() {
     group('UpdateP1NameEvent', () {
       test('Should emit new name when UpdateP1NameEvent successfully added', harness((given, when, then) async {
         given.scoreboardBlocSetUp();
-        await given.gameCreated();
+        await given.gameCreated(pin: 111);
         await when.add(const UpdateP1NameEvent('Bill'));
         await when.waitNextState();
-        then.p1Name(equals(1));
+        expect(then.state, const ScoreboardState(status: Status.success));
       }));
 
       test('Should emit failure when UpdateP1NameEvent fails', harness((given, when, then) async {
@@ -109,6 +109,28 @@ void main() {
         await when.add(const UpdateP1NameEvent('Bill'));
         await when.waitNextState();
         expect(then.state, ScoreboardState(status: Status.unknown, gameResult: Failure('Failed to update p1Name')));
+      }));
+    });
+
+    group('UpdateP2NameEvent', () {
+      test('Should emit new name when UpdateP2NameEvent successfully added', harness((given, when, then) async {
+        given.scoreboardBlocSetUp();
+        await given.gameCreated(pin: 111);
+        await when.add(const UpdateP2NameEvent('Phil'));
+        await when.waitNextState();
+        expect(then.state, const ScoreboardState(status: Status.success));
+      }));
+
+      test('Should emit failure when UpdateP2NameEvent fails', harness((given, when, then) async {
+        given.scoreboardBlocSetUp(withMockRepo: true);
+        mock.when(() => when.harness.firestoreRepo.createUserGame(123)).thenAnswer((invocation) async {});
+        mock
+            .when(() => when.harness.firestoreRepo.updateName(playerPosition: 2, name: 'Bill'))
+            .thenThrow(() => Exception());
+
+        await when.add(const UpdateP2NameEvent('Phil'));
+        await when.waitNextState();
+        expect(then.state, ScoreboardState(status: Status.unknown, gameResult: Failure('Failed to update p2Name')));
       }));
     });
   });

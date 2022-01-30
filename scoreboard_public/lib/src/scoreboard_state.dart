@@ -8,6 +8,7 @@ class ScoreboardState extends Equatable {
 
   int get p1score => gameResult?.success.p1Score ?? 0;
   String get p1Name => gameResult?.success.p1Name ?? 'Player1';
+  String get p2Name => gameResult?.success.p2Name ?? 'Player2';
 
   final Status status;
   final Result<Game, Object>? gameResult;
