@@ -170,7 +170,7 @@ packages:
     source: hosted
     version: "1.2.0"
   fake_cloud_firestore:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: fake_cloud_firestore
       url: "https://pub.dartlang.org"

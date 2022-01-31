@@ -13,6 +13,7 @@ dependencies:
   cache_client:
     path: ../cache_client
   equatable: ^2.0.3
+  fake_cloud_firestore: ^1.2.0
   firebase_auth: ^3.3.4
   flutter:
     sdk: flutter
