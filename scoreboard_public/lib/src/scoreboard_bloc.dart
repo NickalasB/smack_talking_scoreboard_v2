@@ -40,7 +40,7 @@ class ConcreteScoreboardBloc extends Bloc<ScoreboardEvent, ScoreboardState> {
       final fetchedGame = await _firestore.fetchGame(event.pin);
       emit(ScoreboardState(status: Status.success, gameResult: Success(fetchedGame)));
     } catch (e) {
-      emit(const ScoreboardState(status: Status.unknown));
+      emit(ScoreboardState(status: Status.unknown, gameResult: Failure('Failed to fetch game: $e')));
     }
   }
 

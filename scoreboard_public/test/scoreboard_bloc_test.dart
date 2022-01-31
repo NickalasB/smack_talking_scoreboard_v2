@@ -57,6 +57,66 @@ void main() {
 
         expect(then.state, ScoreboardState(status: Status.success, gameResult: Success(const Game().copyWith())));
       }));
+
+      test('Should emit fetched game that has been modified when FetchGameEvent successfully added',
+          harness((given, when, then) async {
+        given.scoreboardBlocSetUp();
+        await given.gameCreated(pin: 4444);
+
+        await when.add(const UpdateP1NameEvent('New P1Name'));
+        await when.add(const UpdateP2NameEvent('New P2Name'));
+
+        await when.add(const UpdateP1ScoreEvent(7));
+        await when.add(const UpdateP2ScoreEvent(11));
+
+        await when.add(const FetchGameEvent(pin: 4444));
+        await when.waitNextState();
+
+        expect(
+            then.state,
+            ScoreboardState(
+              status: Status.success,
+              gameResult: Success(const Game().copyWith(
+                p1Name: 'New P1Name',
+                p2Name: 'New P2Name',
+                p1Score: 7,
+                p2Score: 11,
+              )),
+            ));
+      }));
+
+      test('Should emit failure when FetchGameEvent called with incorrect pin', harness((given, when, then) async {
+        given.scoreboardBlocSetUp();
+        await given.gameCreated(pin: 1234);
+
+        await when.add(const FetchGameEvent(pin: 123));
+        await when.waitNextState();
+
+        expect(
+            then.state,
+            ScoreboardState(
+              status: Status.unknown,
+              gameResult: Failure('Failed to fetch game: Null check operator used on a null value'),
+            ));
+      }));
+
+      test('Should emit failure when FetchGameEvent called fails', harness((given, when, then) async {
+        given.scoreboardBlocSetUp(withMockRepo: true);
+        mock.when(() => when.harness.firestoreRepo.createUserGame(1234)).thenAnswer((invocation) async {});
+        mock.when(() => when.harness.firestoreRepo.fetchGame(123)).thenThrow(Exception('FetchGame call failed'));
+
+        await given.gameCreated(pin: 1234);
+
+        await when.add(const FetchGameEvent(pin: 123));
+        await when.waitNextState();
+
+        expect(
+            then.state,
+            ScoreboardState(
+              status: Status.unknown,
+              gameResult: Failure('Failed to fetch game: Exception: FetchGame call failed'),
+            ));
+      }));
     });
 
     group('UpdateP1ScoreEvent', () {
