@@ -33,9 +33,26 @@ void main() {
       userEmail: 'test@test.com',
       firebaseFirestore: fakeFireStore,
     );
-    await repo.createUserGame(555);
+    await repo.createUserGame(123);
 
     expect(repo.deleteUserGame(555), completes);
+  });
+
+  test('deleteUserGame should throw if game does not exist', () async {
+    final fakeFireStore = FakeFirebaseFirestore();
+    final repo = FirestoreRepository(
+      userEmail: 'test@test.com',
+      firebaseFirestore: fakeFireStore,
+    );
+    await repo.createUserGame(123);
+
+    expect(
+        repo.deleteUserGame(555),
+        throwsA(isA<Exception>().having(
+          (p0) => p0.toString(),
+          'message',
+          'Exception: Game does not exist',
+        )));
   });
 
   test('gameRef should be set when createUserGameCompletes ', () async {
