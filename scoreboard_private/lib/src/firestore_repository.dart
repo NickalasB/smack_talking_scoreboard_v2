@@ -14,7 +14,13 @@ class FirestoreRepository implements ClientFirestoreRepository {
   @visibleForTesting
   CollectionReference<Game> get userGamesCollectionRef {
     return _firebaseFirestore.collection('users').doc(userEmail).collection('games').withConverter<Game>(
-          fromFirestore: (snapshot, _) => Game.fromJson(snapshot.data()!),
+          fromFirestore: (snapshot, _) {
+            if (snapshot.exists) {
+              return Game.fromJson(snapshot.data()!);
+            } else {
+              throw Exception('Game does not exist');
+            }
+          },
           toFirestore: (game, _) => game.toJson(),
         );
   }
@@ -26,6 +32,13 @@ class FirestoreRepository implements ClientFirestoreRepository {
   Future<void> createUserGame(int pin) async {
     gameRef = userGamesCollectionRef.doc(pin.toString());
     gameRef!.set(const Game());
+  }
+
+  @override
+  Future<void> deleteUserGame(int pin) async {
+    if ((await userGamesCollectionRef.doc(pin.toString()).get()).exists) {
+      return userGamesCollectionRef.doc(pin.toString()).delete();
+    }
   }
 
   @override

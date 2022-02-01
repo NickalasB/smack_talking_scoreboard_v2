@@ -27,6 +27,17 @@ void main() {
     expect(repo.createUserGame(123), completes);
   });
 
+  test('deleteUserGame should work', () async {
+    final fakeFireStore = FakeFirebaseFirestore();
+    final repo = FirestoreRepository(
+      userEmail: 'test@test.com',
+      firebaseFirestore: fakeFireStore,
+    );
+    await repo.createUserGame(555);
+
+    expect(repo.deleteUserGame(555), completes);
+  });
+
   test('gameRef should be set when createUserGameCompletes ', () async {
     final fakeFireStore = FakeFirebaseFirestore();
     final repo = FirestoreRepository(
