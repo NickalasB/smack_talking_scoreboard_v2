@@ -38,11 +38,38 @@ void main() {
       test('Should emit unknown state when CreateUserGameEvent fails', harness((given, when, then) async {
         given.scoreboardBlocSetUp(withMockRepo: true);
 
-        mock.when(() => when.harness.firestoreRepo.createUserGame(123)).thenThrow(() => Exception());
+        mock.when(() => when.harness.firestoreRepo.createUserGame(123)).thenThrow(Exception('Something went wrong'));
 
         await when.add(const CreateUserGameEvent(321));
         await when.waitNextState();
         expect(then.state, const ScoreboardState(status: Status.unknown));
+      }));
+    });
+
+    group('DeleteGame', () {
+      test('Should emit proper state when DeleteGame event added successfully', harness((given, when, then) async {
+        given.scoreboardBlocSetUp();
+        await when.add(const CreateUserGameEvent(111));
+        await tick();
+        expect(then.state, const ScoreboardState(status: Status.success));
+
+        await when.add(const DeleteGameEvent(pin: 111));
+        await when.waitNextState();
+        expect(then.state, const ScoreboardState(status: Status.success));
+      }));
+
+      test('Should emit unknown state when DeleteUserGameEvent fails', harness((given, when, then) async {
+        given.scoreboardBlocSetUp();
+        await when.add(const CreateUserGameEvent(111));
+        await tick();
+        expect(then.state, const ScoreboardState(status: Status.success));
+
+        await when.add(const DeleteGameEvent(pin: 22));
+        await when.waitNextState();
+        expect(
+            then.state,
+            ScoreboardState(
+                status: Status.unknown, gameResult: Failure('Failed to delete game: Exception: Game does not exist')));
       }));
     });
 
@@ -95,9 +122,10 @@ void main() {
         expect(
             then.state,
             ScoreboardState(
-              status: Status.unknown,
-              gameResult: Failure('Failed to fetch game: Null check operator used on a null value'),
-            ));
+                status: Status.unknown,
+                gameResult: Failure(
+                  'Failed to fetch game: Exception: Game does not exist',
+                )));
       }));
 
       test('Should emit failure when FetchGameEvent called fails', harness((given, when, then) async {
@@ -133,11 +161,15 @@ void main() {
         mock.when(() => when.harness.firestoreRepo.createUserGame(123)).thenAnswer((invocation) async {});
         mock
             .when(() => when.harness.firestoreRepo.updateScore(playerPosition: 1, score: 1))
-            .thenThrow(() => Exception());
+            .thenThrow(Exception('Something went wrong'));
 
         await when.add(const UpdateP1ScoreEvent(1));
         await when.waitNextState();
-        expect(then.state, ScoreboardState(status: Status.unknown, gameResult: Failure('Failed to update p1Score')));
+        expect(
+            then.state,
+            ScoreboardState(
+                status: Status.unknown,
+                gameResult: Failure('Failed to update p1Score: Exception: Something went wrong')));
       }));
     });
 
@@ -154,12 +186,16 @@ void main() {
         given.scoreboardBlocSetUp(withMockRepo: true);
         mock.when(() => when.harness.firestoreRepo.createUserGame(123)).thenAnswer((invocation) async {});
         mock
-            .when(() => when.harness.firestoreRepo.updateScore(playerPosition: 1, score: 1))
-            .thenThrow(() => Exception());
+            .when(() => when.harness.firestoreRepo.updateScore(playerPosition: 2, score: 1))
+            .thenThrow(Exception('Something went wrong'));
 
         await when.add(const UpdateP2ScoreEvent(1));
         await when.waitNextState();
-        expect(then.state, ScoreboardState(status: Status.unknown, gameResult: Failure('Failed to update p2Score')));
+        expect(
+            then.state,
+            ScoreboardState(
+                status: Status.unknown,
+                gameResult: Failure('Failed to update p2Score: Exception: Something went wrong')));
       }));
     });
 
@@ -177,11 +213,11 @@ void main() {
         mock.when(() => when.harness.firestoreRepo.createUserGame(123)).thenAnswer((invocation) async {});
         mock
             .when(() => when.harness.firestoreRepo.updateName(playerPosition: 1, name: 'Bill'))
-            .thenThrow(() => Exception());
+            .thenThrow(Exception('Something went wrong'));
 
         await when.add(const UpdateP1NameEvent('Bill'));
         await when.waitNextState();
-        expect(then.state, ScoreboardState(status: Status.unknown, gameResult: Failure('Failed to update p1Name')));
+        expect(then.state.gameResult!.failure.toString(), contains('Failed to update p1Name'));
       }));
     });
 
@@ -199,11 +235,11 @@ void main() {
         mock.when(() => when.harness.firestoreRepo.createUserGame(123)).thenAnswer((invocation) async {});
         mock
             .when(() => when.harness.firestoreRepo.updateName(playerPosition: 2, name: 'Bill'))
-            .thenThrow(() => Exception());
+            .thenThrow(Exception('Something went wrong'));
 
         await when.add(const UpdateP2NameEvent('Phil'));
         await when.waitNextState();
-        expect(then.state, ScoreboardState(status: Status.unknown, gameResult: Failure('Failed to update p2Name')));
+        expect(then.state.gameResult!.failure.toString(), contains('Failed to update p2Name'));
       }));
     });
   });

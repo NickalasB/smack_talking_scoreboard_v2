@@ -8,6 +8,11 @@ void main() {
       expect(const CreateUserGameEvent(1), isNot(equals(const CreateUserGameEvent(2))));
     });
 
+    test('DeleteGameEvent should have value-type equality', () {
+      expect(const DeleteGameEvent(pin: 1), equals(const DeleteGameEvent(pin: 1)));
+      expect(const DeleteGameEvent(pin: 1), isNot(equals(const DeleteGameEvent(pin: 2))));
+    });
+
     test('FetchGameEvent should have value-type equality', () {
       expect(const FetchGameEvent(pin: 1), equals(const FetchGameEvent(pin: 1)));
       expect(const FetchGameEvent(pin: 1), isNot(equals(const FetchGameEvent(pin: 2))));
