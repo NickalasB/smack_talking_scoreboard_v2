@@ -31,6 +31,7 @@ dependencies:
     sdk: flutter
   given_when_then: ^0.2.0
   result_type: ^0.1.0
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
@@ -39,6 +40,7 @@ dev_dependencies:
   mocktail: ^0.2.0
 
 flutter:
+  generate: true
   uses-material-design: true
   assets:
     - assets/
