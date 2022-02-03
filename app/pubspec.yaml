@@ -27,6 +27,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.0.0
+  flutter_localizations:
+    sdk: flutter
   given_when_then: ^0.2.0
   result_type: ^0.1.0
 
