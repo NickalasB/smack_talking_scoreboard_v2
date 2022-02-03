@@ -3,6 +3,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:smack_talking_scoreboard_v2/main.dart';
 import 'package:smack_talking_scoreboard_v2/src/blocs/app/app_bloc.dart';
@@ -33,6 +34,13 @@ void main() {
       when(() => user.isNotAnonymous).thenReturn(true);
       when(() => user.isAnonymous).thenReturn(false);
       when(() => user.email).thenReturn('test@gmail.com');
+    });
+
+    group('Goldens', () {
+      testGoldens('HomeScreen', (tester) async {
+        await tester.pumpWidgetBuilder(App(authentication: authenticationRepository));
+        await screenMatchesGolden(tester, 'home_screen');
+      });
     });
 
     testWidgets('renders AppView', (tester) async {
