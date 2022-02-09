@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:mocktail/mocktail.dart';
+import 'package:mocktail/mocktail.dart' as mock;
 import 'package:smack_talking_scoreboard_v2/main.dart';
 import 'package:smack_talking_scoreboard_v2/src/blocs/app/app_bloc.dart';
 import 'package:smack_talking_scoreboard_v2/src/presentation/screens/home_screen.dart';
 
+import '../harness.dart';
 import '../test_helpers.dart';
 
-class MockUser extends Mock implements ScoreboardUser {}
+class MockUser extends mock.Mock implements ScoreboardUser {}
 
-class MockAuthenticationRepository extends Mock implements Authentication {}
+class MockAuthenticationRepository extends mock.Mock implements Authentication {}
 
 class MockAppBloc extends MockBloc<AppEvent, AppState> implements AppBloc {}
 
@@ -27,29 +28,29 @@ void main() {
     setUp(() {
       authenticationRepository = MockAuthenticationRepository();
       user = MockUser();
-      when(() => authenticationRepository.user).thenAnswer(
-        (_) => const Stream.empty(),
-      );
-      when(() => authenticationRepository.currentUser).thenReturn(user);
-      when(() => user.isNotAnonymous).thenReturn(true);
-      when(() => user.isAnonymous).thenReturn(false);
-      when(() => user.email).thenReturn('test@gmail.com');
+      mock.when(() => authenticationRepository.user).thenAnswer(
+            (_) => const Stream.empty(),
+          );
+      mock.when(() => authenticationRepository.currentUser).thenReturn(user);
+      mock.when(() => user.isNotAnonymous).thenReturn(true);
+      mock.when(() => user.isAnonymous).thenReturn(false);
+      mock.when(() => user.email).thenReturn('test@gmail.com');
     });
 
     group('Goldens', () {
-      testGoldens('HomeScreen', (tester) async {
-        await tester.pumpWidgetBuilder(App(authentication: authenticationRepository));
-        await screenMatchesGolden(tester, 'home_screen');
-      });
+      testGoldens('HomeScreen', harness((given, when, then) async {
+        await when.pumpMaterialWidget(App(authentication: authenticationRepository));
+        await then.screenMatchesGoldenFile('home_screen');
+      }));
     });
 
-    testWidgets('renders AppView', (tester) async {
-      await tester.pumpWidget(
+    testWidgets('renders AppView', harness((given, when, then) async {
+      await when.pumpMaterialWidget(
         App(authentication: authenticationRepository),
       );
-      await tester.pump();
+      await when.pump();
       expect(find.byType(AppView), findsOneWidget);
-    });
+    }));
   });
 
   group('AppView', () {
@@ -61,9 +62,9 @@ void main() {
       appBloc = MockAppBloc();
     });
 
-    testWidgets('navigates to LoginPage when unauthenticated', (tester) async {
-      when(() => appBloc.state).thenReturn(const AppState.unauthenticated());
-      await tester.pumpWidget(
+    testWidgets('navigates to LoginPage when unauthenticated', harness((given, when, then) async {
+      mock.when(() => appBloc.state).thenReturn(const AppState.unauthenticated());
+      await when.pumpMaterialWidget(
         RepositoryProvider.value(
           value: authenticationRepository,
           child: MaterialApp(
@@ -71,15 +72,15 @@ void main() {
           ),
         ),
       );
-      await tester.pumpAndSettle();
+      await when.pumpAndSettle();
       expect(find.byType(LoginPage), findsOneWidget);
-    });
+    }));
 
-    testWidgets('navigates to HomePage when authenticated', (tester) async {
+    testWidgets('navigates to HomePage when authenticated', harness((given, when, then) async {
       final user = MockUser();
-      when(() => user.email).thenReturn('test@gmail.com');
-      when(() => appBloc.state).thenReturn(AppState.authenticated(user));
-      await tester.pumpWidget(
+      mock.when(() => user.email).thenReturn('test@gmail.com');
+      mock.when(() => appBloc.state).thenReturn(AppState.authenticated(user));
+      await when.pumpMaterialWidget(
         RepositoryProvider.value(
           value: authenticationRepository,
           child: MaterialApp(
@@ -87,8 +88,8 @@ void main() {
           ),
         ),
       );
-      await tester.pumpAndSettle();
+      await when.pumpAndSettle();
       expect(find.byType(HomeScreen), findsOneWidget);
-    });
+    }));
   });
 }
